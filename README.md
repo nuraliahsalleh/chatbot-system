@@ -4,11 +4,7 @@ How to run:
 1. Install dependencies:
    npm install
 
-2. Start mock API:
-   npm run start:api
-   (runs http://localhost:4003)
-
-3. Start frontend dev server:
+2. Start frontend dev server:
    npm run dev
    (open http://localhost:5173)
 
