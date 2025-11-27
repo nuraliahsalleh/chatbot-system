@@ -17,6 +17,3 @@ Routing:
 - Agency pages start with /agency/ (e.g. /agency/login, /agency/register)
 - Public pages start with /public/ (e.g. /public/login, /public/register)
 
-Notes:
-- Login pages are pixel-focused per PDFs. Other pages are implemented as placeholders (card + notes) ready to be filled with tables/forms/charts.
-- If you want all pages filled with complete functionality (forms, charts, pagination), I can continue to implement them page-by-page.
