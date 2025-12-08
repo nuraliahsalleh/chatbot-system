@@ -1,5 +1,6 @@
 import React from 'react'
 import { Outlet, Link, useNavigate } from 'react-router-dom'
+import companyLogo from "../assets/logoctsb2.png";
 
 export default function AdminLayout() {
   const navigate = useNavigate();
@@ -24,10 +25,10 @@ export default function AdminLayout() {
       
       {/* ========== SIDEBAR ========== */}
       <aside className="w-72 p-6 bg-white border-r">
-        <div className="mb-6">
-          <img src="/src/assets/logo.svg" alt="logo" className="w-36" />
-          <div className="font-bold text-lg mt-2">SF-C360 Admin</div>
-        </div>
+         {/* LOGO */}
+          <div className="mb-6 flex justify-center">
+          <img src={companyLogo} alt="Company Logo" className="h-14 object-contain"/>
+          </div>
 
         <nav className="space-y-2 text-sm">
           <Link to="/admin/dashboard" className="block py-2 px-3 rounded hover:bg-gray-100">

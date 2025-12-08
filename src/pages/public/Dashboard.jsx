@@ -1,5 +1,3 @@
-
-// src/pages/public/Dashboard.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { usePublicUsers } from "../../contexts/PublicUserContext";
@@ -19,153 +17,153 @@ export default function Dashboard() {
     );
   }
 
-  // const chats = getChatsForUser(currentUser.id);
-  // Chat asal
-const allChats = getChatsForUser(currentUser.id);
+  const allChats = getChatsForUser(currentUser.id);
 
-// Gabungkan chat ikut agensi (ambil chat terbaru sahaja)
-const chats = Object.values(
-  allChats.reduce((acc, chat) => {
-    if (!acc[chat.agencyId]) {
-      acc[chat.agencyId] = chat; // simpan chat pertama
-    } else {
-      // sentiasa ambil chat paling baru
+  // Take latest chat per agency
+  const chats = Object.values(
+    allChats.reduce((acc, chat) => {
       const prev = acc[chat.agencyId];
-      if (new Date(chat.updatedAt) > new Date(prev.updatedAt)) {
+      if (!prev || new Date(chat.updatedAt) > new Date(prev.updatedAt)) {
         acc[chat.agencyId] = chat;
       }
-    }
-    return acc;
-  }, {})
-);
+      return acc;
+    }, {})
+  );
 
-
-  // Semua kategori FAQ (untuk dropdown)
-  const allCategories =
-    JSON.parse(localStorage.getItem("faq_categories") || "[]");
+  const allCategories = JSON.parse(localStorage.getItem("faq_categories") || "[]");
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-2">
-        Selamat Datang {currentUser.name}
-      </h2>
-      <p className="text-gray-600 mb-6">
-        Berikut adalah ringkasan aktiviti chat anda dengan pelbagai agensi
-        kerajaan.
-      </p>
+    <div className="min-h-screen bg-white p-6 flex justify-center">
 
-      {/* Statistik ringkas */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
-        <div className="p-4 bg-white rounded shadow">
-          <div className="text-sm text-gray-500">Jumlah Chat</div>
-          <div className="text-xl font-bold">{chats.length}</div>
-        </div>
+      {/* Middle Container */}
+      <div
+        className="w-full max-w-6xl p-8 rounded-xl shadow-sm"
+        style={{
+          backgroundColor: "#FFF3EC", // very light orange
+        }}
+      >
 
-        <div className="p-4 bg-white rounded shadow">
-          <div className="text-sm text-gray-500">Chat Aktif</div>
-          <div className="text-xl font-bold">
-            {chats.filter((c) => c.status === "active").length}
-          </div>
-        </div>
+        {/* Title Section */}
+        <h2 className="text-3xl font-bold mb-2" style={{ color: "#0A3D62" }}>
+          Selamat Datang {currentUser.name}
+        </h2>
+        <p className="text-gray-700 mb-6 text-lg">
+          Berikut adalah ringkasan aktiviti chat anda dengan pelbagai agensi kerajaan.
+        </p>
 
-        <div className="p-4 bg-white rounded shadow">
-          <div className="text-sm text-gray-500">Chat Selesai</div>
-          <div className="text-xl font-bold">
-            {chats.filter((c) => c.status === "closed").length}
-          </div>
-        </div>
-
-        <div className="p-4 bg-white rounded shadow">
-          <div className="text-sm text-gray-500">Tarikh Sertai</div>
-          <div className="text-xl font-bold">
-            {new Date(currentUser.createdAt).toLocaleDateString("ms-MY")}
-          </div>
-        </div>
-      </div>
-
-      {/* Sejarah Chat */}
-      <div className="bg-white p-4 rounded shadow">
-        <h3 className="font-semibold mb-3">Sejarah Chat</h3>
-
-        {chats.length === 0 && (
-          <div className="py-8 text-center text-gray-500">
-            Tiada sejarah chat lagi. Klik{" "}
-            <button
-              className="text-blue-600 underline"
-              onClick={() => navigate("/public/agencies")}
-            >
-              Mulakan Chat Baru
-            </button>{" "}
-            untuk mula.
-          </div>
-        )}
-
-        {chats.map((c) => {
-          const agencyCategories = allCategories.filter(
-            (cat) => cat.agencyId === c.agencyId
-          );
-
-          return (
+        {/* Statistic Cards */}
+        <div className="grid grid-cols-4 gap-4 mb-6">
+          {[
+            { label: "Jumlah Chat", value: chats.length },
+            { label: "Chat Aktif", value: chats.filter((c) => c.status === "active").length },
+            { label: "Chat Selesai", value: chats.filter((c) => c.status === "closed").length },
+            { label: "Tarikh Sertai", value: new Date(currentUser.createdAt).toLocaleDateString("ms-MY") }
+          ].map((item, index) => (
             <div
-              key={c.id}
-              className="border-b last:border-b-0 py-3 flex items-start justify-between"
+              key={index}
+              className="p-4 bg-white rounded-xl shadow-md border"
+              style={{ borderColor: "#FFC9A9" }}
             >
-              <div>
-                <div className="font-semibold">{c.agencyName}</div>
-                <div className="text-gray-500 text-sm">
-                  {c.messages?.[c.messages.length - 1]?.text || "Tiada mesej"}
-                </div>
-                <div className="text-gray-400 text-xs mt-1">
-                  {new Date(c.updatedAt).toLocaleString("ms-MY")}
-                </div>
+              <div className="text-sm text-gray-600">{item.label}</div>
+              <div className="text-2xl font-bold text-gray-900">
+                {item.value}
               </div>
+            </div>
+          ))}
+        </div>
 
-              <div className="flex flex-col gap-2 items-end">
-                <div className="flex gap-2">
-                  <button
-                    className="px-3 py-1 border rounded bg-white hover:bg-gray-100"
-                    onClick={() => navigate(`/public/chat?chatId=${c.id}`)}
+        {/* Chat History */}
+        <div
+          className="bg-white p-6 rounded-xl shadow-md border"
+          style={{ borderColor: "#FFC9A9" }}
+        >
+          <h3
+            className="font-semibold text-xl mb-4"
+            style={{ color: "#0A3D62" }}
+          >
+            Sejarah Chat
+          </h3>
+
+          {chats.length === 0 && (
+            <div className="py-10 text-center text-gray-500">
+              Tiada sejarah chat.{" "}
+              <button
+                className="text-blue-600 underline"
+                onClick={() => navigate("/public/agencies")}
+              >
+                Mulakan Chat Baru
+              </button>
+            </div>
+          )}
+
+          {chats.map((c) => {
+            const agencyCategories = allCategories.filter(
+              (cat) => cat.agencyId === c.agencyId
+            );
+
+            return (
+              <div
+                key={c.id}
+                className="border-b last:border-b-0 py-4 flex items-start justify-between"
+                style={{ borderColor: "#FFE0C2" }}
+              >
+                <div>
+                  <div
+                    className="font-semibold text-lg"
+                    style={{ color: "#0A3D62" }}
                   >
-                    Lihat
-                  </button>
+                    {c.agencyName}
+                  </div>
+                  <div className="text-gray-500 text-sm">
+                    {c.messages?.[c.messages.length - 1]?.text || "Tiada mesej"}
+                  </div>
+                  <div className="text-gray-400 text-xs mt-1">
+                    {new Date(c.updatedAt).toLocaleString("ms-MY")}
+                  </div>
+                </div>
 
-                  {/* DROPDOWN KATEGORI FAQ */}
-                  {agencyCategories.length === 0 ? (
+                <div className="flex flex-col gap-2 items-end">
+                  <div className="flex gap-3">
                     <button
-                      className="px-3 py-1 border rounded bg-gray-50 text-gray-400 cursor-not-allowed"
-                      disabled
+                      className="px-4 py-1.5 rounded-lg text-sm font-medium shadow-sm"
+                      style={{ backgroundColor: "#0A3D62", color: "white" }}
+                      onClick={() =>
+                        navigate(`/public/chat?chatId=${c.id}`)
+                      }
                     >
-                      Soalan Lazim (Tiada)
+                      Lihat
                     </button>
-                  ) : (
-                    <select
-                      className="px-3 py-1 border rounded bg-white text-sm hover:bg-gray-100"
-                      defaultValue=""
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        if (!value) return;
-                        navigate(
-                          `/public/faq?agencyId=${c.agencyId}&categoryId=${value}`
-                        );
-                      }}
-                    >
-                      <option value="">Soalan Lazim (FAQ)</option>
-                      {agencyCategories.map((cat) => (
-                        <option key={cat.id} value={cat.id}>
-                          {cat.name}
-                        </option>
-                      ))}
-                    </select>
-                  )}
 
-                  {/* Aduan & Maklum Balas */}
-                  {/* {c.feedback ? (
-                    <span className="px-3 py-1 text-green-600 font-semibold">
-                      ✓ Dihantar
-                    </span>
-                  ) : (
+                    {/* FAQ Dropdown */}
+                    {agencyCategories.length === 0 ? (
+                      <button className="px-4 py-1.5 rounded-lg bg-gray-200 text-gray-400 cursor-not-allowed text-sm">
+                        Soalan Lazim (Tiada)
+                      </button>
+                    ) : (
+                      <select
+                        className="px-4 py-1.5 rounded-lg border text-sm"
+                        style={{ backgroundColor: "white" }}
+                        defaultValue=""
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (value)
+                            navigate(
+                              `/public/faq?agencyId=${c.agencyId}&categoryId=${value}`
+                            );
+                        }}
+                      >
+                        <option value="">Soalan Lazim (FAQ)</option>
+                        {agencyCategories.map((cat) => (
+                          <option key={cat.id} value={cat.id}>
+                            {cat.name}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+
                     <button
-                      className="px-3 py-1 border rounded bg-white hover:bg-gray-100"
+                      className="px-4 py-1.5 rounded-lg text-sm shadow-sm"
+                      style={{ backgroundColor: "#FF8F54", color: "white" }}
                       onClick={() =>
                         navigate(
                           `/public/feedback?chatId=${c.id}&agency=${c.agencyName}`
@@ -174,39 +172,31 @@ const chats = Object.values(
                     >
                       Aduan & Maklum Balas
                     </button>
-                  )} */}
-                  <button
-                    className="px-3 py-1 border rounded bg-white hover:bg-gray-100"
-                    onClick={() =>
-                      navigate(
-                        `/public/feedback?chatId=${c.id}&agency=${c.agencyName}`
-                      )
-                    }
-                  >
-                    Aduan & Maklum Balas
-                  </button>
+                  </div>
 
-                </div>
-
-                <div className="text-sm text-gray-500">
-                  {c.status === "active" ? (
-                    <span className="text-green-600">Aktif</span>
-                  ) : (
-                    <span className="text-gray-600">Selesai</span>
-                  )}
+                  <div className="text-sm">
+                    {c.status === "active" ? (
+                      <span className="text-green-700 font-semibold">
+                        Aktif
+                      </span>
+                    ) : (
+                      <span className="text-gray-600">Selesai</span>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
 
-        <div className="mt-4 text-right">
-          <button
-            className="px-4 py-2 bg-black text-white rounded"
-            onClick={() => navigate("/public/agencies")}
-          >
-            Mulakan Chat Baru
-          </button>
+          <div className="mt-6 text-right">
+            <button
+              className="px-5 py-2 rounded-lg text-white font-medium shadow-md"
+              style={{ backgroundColor: "#0A3D62" }}
+              onClick={() => navigate("/public/agencies")}
+            >
+              Mulakan Chat Baru
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -116,7 +116,7 @@ export default function AdminLogin() {
         <div className="space-y-4">
           <input
             className="input-pill"
-            placeholder="Email atau Username"
+            placeholder="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />

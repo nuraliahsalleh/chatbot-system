@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { usePublicUsers } from "../../contexts/PublicUserContext";
@@ -48,7 +47,6 @@ export default function Chat() {
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
 
-    // Dummy bot reply
     setTimeout(() => {
       const botReply = {
         from: "bot",
@@ -64,7 +62,7 @@ export default function Chat() {
 
   // === AVATARS ===
   const RobotAvatar = () => (
-    <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center shadow">
+    <div className="w-10 h-10 rounded-full bg-[#0A3D62] flex items-center justify-center shadow">
       <span className="text-xl text-white">🤖</span>
     </div>
   );
@@ -82,7 +80,7 @@ export default function Chat() {
       <div className="w-full max-w-2xl bg-white/80 backdrop-blur-md rounded-xl shadow-lg p-5 border border-blue-200 flex items-center gap-3">
         <RobotAvatar />
         <div>
-          <h2 className="text-2xl font-bold text-blue-700">
+          <h2 className="text-2xl font-bold text-[#0A3D62]">
             {chat?.agencyName || "Chatbot C360"}
           </h2>
           <p className="text-sm text-gray-600 mt-1">
@@ -108,9 +106,12 @@ export default function Chat() {
               <div
                 className={`max-w-xs px-4 py-3 rounded-2xl shadow ${
                   msg.from === "user"
-                    ? "bg-blue-600 text-white rounded-br-none"
+                    ? "text-white rounded-br-none"
                     : "bg-white text-gray-700 border border-blue-100 rounded-bl-none"
                 }`}
+                style={{
+                  backgroundColor: msg.from === "user" ? "#0A3D62" : "white",
+                }}
               >
                 <p className="text-sm">{msg.text}</p>
                 <div className="text-[10px] text-gray-400 mt-1 text-right">
@@ -128,14 +129,19 @@ export default function Chat() {
         {/* Input Bar */}
         <div className="p-4 border-t bg-white flex gap-3 items-center">
           <input
-            className="flex-1 border border-blue-300 rounded-full px-4 py-2 bg-blue-50/70 focus:outline-blue-400"
+            className="flex-1 border rounded-full px-4 py-2 bg-blue-50/70 focus:outline-none"
+            style={{
+              borderColor: "#0A3D62",
+              boxShadow: "0 0 0 1px #0A3D62 inset",
+            }}
             placeholder="Taip mesej anda..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && sendMessage()}
           />
           <button
-            className="bg-blue-600 hover:bg-blue-700 transition text-white px-6 py-2 rounded-full shadow-md"
+            className="text-white px-6 py-2 rounded-full shadow-md hover:opacity-90 transition"
+            style={{ backgroundColor: "#0A3D62" }}
             onClick={sendMessage}
           >
             Hantar
@@ -146,5 +152,3 @@ export default function Chat() {
     </div>
   );
 }
-
-

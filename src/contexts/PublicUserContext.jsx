@@ -267,21 +267,7 @@ export function PublicUserProvider({ children }) {
     return newUser;
   };
 
-  /* --------------------------------------------------
-     LOGIN USER
-  -------------------------------------------------- */
-  // const login = (email, password) => {
-  //   const found = users.find(
-  //     (u) => u.email.toLowerCase() === email.toLowerCase()
-  //   );
 
-  //   if (!found) {
-  //     return { success: false, message: "Email tidak ditemui." };
-  //   }
-
-  //   setCurrentUser(found);
-  //   return { success: true, user: found };
-  // };
   const login = (email, password) => {
   const found = users.find(
     (u) => u.email.toLowerCase() === email.toLowerCase()

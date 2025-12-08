@@ -1,70 +1,7 @@
-
-// import React from "react";
-// import { Outlet, Link } from "react-router-dom";
-// import { useAgency } from "../contexts/AgencyContext"; // <-- path betul
-
-// export default function AgencyLayout() {
-//   const { currentAgency } = useAgency();
-
-//   return (
-//     <div className="min-h-screen flex">
-//       <aside className="w-64 p-5 bg-white border-r">
-//         <div className="mb-4 font-bold text-lg">SF-C360 Agency</div>
-
-//         <nav className="space-y-2 text-sm">
-//           <Link
-//             to="/agency/dashboard"
-//             className="block py-2 px-3 rounded hover:bg-gray-100"
-//           >
-//             Dashboard
-//           </Link>
-
-//           <Link
-//             to="/agency/settings"
-//             className="block py-2 px-3 rounded hover:bg-gray-100"
-//           >
-//             Tetapan Chatbot
-//           </Link>
-
-//           <Link
-//             to="/agency/faq-categories"
-//             className="block py-2 px-3 rounded hover:bg-gray-100"
-//           >
-//             FAQ
-//           </Link>
-
-//           <Link
-//             to="/agency/reports"
-//             className="block py-2 px-3 rounded hover:bg-gray-100"
-//           >
-//             Laporan
-//           </Link>
-//         </nav>
-//       </aside>
-
-//       <div className="flex-1 p-6">
-//         <header className="flex justify-between items-center mb-6">
-//           <h1 className="text-lg font-semibold">Agency Panel</h1>
-
-//           {/* ------------ DISPLAY AGENCY NAME + CODE HERE ----------- */}
-//           <div className="text-sm text-gray-700 font-medium">
-//             {currentAgency
-//               ? `Signed in as ${currentAgency.name} (${currentAgency.code})`
-//               : "Signed in as Pegawai"}
-//           </div>
-//           {/* -------------------------------------------------------- */}
-//         </header>
-
-//         <main>
-//           <Outlet />
-//         </main>
-//       </div>
-//     </div>
-//   );
-// }
 import React from "react";
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import { useAgency } from "../contexts/AgencyContext";
+import companyLogo from "../assets/logoctsb2.png";
 
 export default function AgencyLayout() {
   const { currentAgency, logoutAgency } = useAgency(); 
@@ -85,39 +22,53 @@ export default function AgencyLayout() {
 
   return (
     <div className="min-h-screen flex">
-      <aside className="w-64 p-5 bg-white border-r">
-        <div className="mb-4 font-bold text-lg">SF-C360 Agency</div>
 
+      {/* SIDEBAR */}
+      <aside
+        className="w-64 p-5 text-white"
+        style={{ backgroundColor: "#0A3D62" }}
+      >
+        {/* LOGO */}
+        <div className="mb-6 flex justify-center">
+          <img
+            src={companyLogo}
+            alt="Company Logo"
+            className="h-14 object-contain"
+          />
+        </div>
+
+        {/* NAVIGATION */}
         <nav className="space-y-2 text-sm">
           <Link
             to="/agency/dashboard"
-            className="block py-2 px-3 rounded hover:bg-gray-100"
+            className="block py-2 px-3 rounded hover:bg-white/20 transition text-white"
           >
             Dashboard
           </Link>
 
           <Link
             to="/agency/settings"
-            className="block py-2 px-3 rounded hover:bg-gray-100"
+            className="block py-2 px-3 rounded hover:bg-white/20 transition text-white"
           >
             Tetapan Chatbot
           </Link>
 
           <Link
             to="/agency/faq-categories"
-            className="block py-2 px-3 rounded hover:bg-gray-100"
+            className="block py-2 px-3 rounded hover:bg-white/20 transition text-white"
           >
             FAQ
           </Link>
 
           <Link
             to="/agency/reports"
-            className="block py-2 px-3 rounded hover:bg-gray-100"
+            className="block py-2 px-3 rounded hover:bg-white/20 transition text-white"
           >
             Laporan
           </Link>
         </nav>
       </aside>
+
 
       <div className="flex-1 p-6">
         <header className="flex justify-between items-center mb-6">
