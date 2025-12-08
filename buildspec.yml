@@ -1,0 +1,21 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Installing Node 18
+      - curl -sL https://rpm.nodesource.com/setup_18.x | bash -
+      - yum install -y nodejs
+      - node -v
+      - npm install
+  build:
+    commands:
+      - echo Build started on `date`
+      - npm run build
+artifacts:
+  baseDirectory: dist
+  files:
+    - '**/*'
+cache:
+  paths:
+    - node_modules/**/* 
