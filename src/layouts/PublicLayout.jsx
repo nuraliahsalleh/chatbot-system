@@ -1,9 +1,11 @@
 import React from "react";
 import { Outlet, Link, useNavigate } from "react-router-dom";
-import { FaUserCircle } from "react-icons/fa";
 import { usePublicUsers } from "../contexts/PublicUserContext";
 import companyLogo from "../assets/logoctsb2.png";
 import logoConnect2 from "../assets/logoConnect2.png";
+import { FaUserCircle, FaSignOutAlt } from "react-icons/fa";
+
+
 
 export default function PublicLayout() {
   const { currentUser, logout } = usePublicUsers();
@@ -72,11 +74,12 @@ export default function PublicLayout() {
                 {/* LOGOUT BUTTON — white background, red icon remains */}
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-2 bg-white text-gray-800 px-4 py-1.5 rounded-full text-sm font-medium hover:bg-gray-100 transition"
+                  className="text-white hover:text-gray-300 transition"
+                  title="Log Keluar"
                 >
-                  <span className="text-red-600 text-lg leading-none">↩</span>
-                  <span>Log Keluar</span>
+                  <FaSignOutAlt size={22} />
                 </button>
+
 
               </div>
             )}

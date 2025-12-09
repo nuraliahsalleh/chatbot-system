@@ -1,6 +1,10 @@
+
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { FaComments, FaSignal, FaCheckCircle, FaCalendarCheck } from "react-icons/fa";
 import { usePublicUsers } from "../../contexts/PublicUserContext";
+import dashboardLogo from "../../assets/logoConnect2.png"; 
+
 
 export default function Dashboard() {
   const { currentUser, getChatsForUser } = usePublicUsers();
@@ -19,7 +23,6 @@ export default function Dashboard() {
 
   const allChats = getChatsForUser(currentUser.id);
 
-  // Take latest chat per agency
   const chats = Object.values(
     allChats.reduce((acc, chat) => {
       const prev = acc[chat.agencyId];
@@ -32,55 +35,76 @@ export default function Dashboard() {
 
   const allCategories = JSON.parse(localStorage.getItem("faq_categories") || "[]");
 
+  const stats = [
+    { label: "Jumlah Chat", value: chats.length, icon: <FaComments />, color: "#2196F3" },
+    { label: "Chat Aktif", value: chats.filter((c) => c.status === "active").length, icon: <FaSignal />, color: "#2196F3" },
+    { label: "Chat Selesai", value: chats.filter((c) => c.status === "closed").length, icon: <FaCheckCircle />, color: "#2196F3" },
+    { label: "Tarikh Sertai", value: new Date(currentUser.createdAt).toLocaleDateString("ms-MY"), icon: <FaCalendarCheck />, color: "#2196F3" },
+  ];
+
   return (
-    <div className="min-h-screen bg-white p-6 flex justify-center">
+    <div className="min-h-screen bg-[#f4f7fe] p-6 flex justify-center">
 
-      {/* Middle Container */}
-      <div
-        className="w-full max-w-6xl p-8 rounded-xl shadow-sm"
-        style={{
-          backgroundColor: "#FFF3EC", // very light orange
-        }}
-      >
+      {/* Outer Container (Modern Style) */}
+      <div className="w-full max-w-6xl bg-white rounded-3xl shadow-lg p-10 border border-gray-100">
 
-        {/* Title Section */}
-        <h2 className="text-3xl font-bold mb-2" style={{ color: "#0A3D62" }}>
-          Selamat Datang {currentUser.name}
-        </h2>
-        <p className="text-gray-700 mb-6 text-lg">
-          Berikut adalah ringkasan aktiviti chat anda dengan pelbagai agensi kerajaan.
-        </p>
+      {/* Header */}
+      <div className="flex justify-between items-center mb-8">
+
+        <div>
+          <h2 className="text-4xl font-bold text-[#344767]">
+            Selamat Datang, {currentUser.name}
+          </h2>
+
+          <p className="text-gray-600 text-lg">
+            Berikut adalah ringkasan aktiviti chat anda.
+          </p>
+        </div>
+
+        {/* LOGO ON RIGHT */}
+        <img
+          src={dashboardLogo}
+          alt="Dashboard Logo"
+          className="h-9 object-contain opacity-90 animate-pulse transition-all duration-500"
+        />
+      </div>
+
 
         {/* Statistic Cards */}
-        <div className="grid grid-cols-4 gap-4 mb-6">
-          {[
-            { label: "Jumlah Chat", value: chats.length },
-            { label: "Chat Aktif", value: chats.filter((c) => c.status === "active").length },
-            { label: "Chat Selesai", value: chats.filter((c) => c.status === "closed").length },
-            { label: "Tarikh Sertai", value: new Date(currentUser.createdAt).toLocaleDateString("ms-MY") }
-          ].map((item, index) => (
+        <div className="grid grid-cols-4 gap-6 mb-10">
+          {stats.map((item, index) => (
             <div
               key={index}
-              className="p-4 bg-white rounded-xl shadow-md border"
-              style={{ borderColor: "#FFC9A9" }}
+              className="p-5 bg-white rounded-2xl shadow-md border relative overflow-hidden"
             >
-              <div className="text-sm text-gray-600">{item.label}</div>
-              <div className="text-2xl font-bold text-gray-900">
-                {item.value}
+              {/* Top Colored Border */}
+              <div
+                className="absolute top-0 left-0 w-full h-1"
+                style={{ backgroundColor: item.color }}
+              ></div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-gray-500 text-sm">{item.label}</div>
+                  <div className="text-2xl font-bold text-[#344767] mt-1">
+                    {item.value}
+                  </div>
+                </div>
+
+                <div
+                  className="p-3 rounded-xl text-white"
+                  style={{ backgroundColor: item.color }}
+                >
+                  {item.icon}
+                </div>
               </div>
             </div>
           ))}
         </div>
 
         {/* Chat History */}
-        <div
-          className="bg-white p-6 rounded-xl shadow-md border"
-          style={{ borderColor: "#FFC9A9" }}
-        >
-          <h3
-            className="font-semibold text-xl mb-4"
-            style={{ color: "#0A3D62" }}
-          >
+        <div className="bg-white p-8 rounded-2xl shadow-md border border-gray-200">
+          <h3 className="font-bold text-2xl mb-5 text-[#344767]">
             Sejarah Chat
           </h3>
 
@@ -104,14 +128,10 @@ export default function Dashboard() {
             return (
               <div
                 key={c.id}
-                className="border-b last:border-b-0 py-4 flex items-start justify-between"
-                style={{ borderColor: "#FFE0C2" }}
+                className="border-b py-5 last:border-b-0 flex items-start justify-between"
               >
                 <div>
-                  <div
-                    className="font-semibold text-lg"
-                    style={{ color: "#0A3D62" }}
-                  >
+                  <div className="font-semibold text-lg text-[#344767]">
                     {c.agencyName}
                   </div>
                   <div className="text-gray-500 text-sm">
@@ -124,17 +144,20 @@ export default function Dashboard() {
 
                 <div className="flex flex-col gap-2 items-end">
                   <div className="flex gap-3">
+
+                    {/* View Button */}
                     <button
-                      className="px-4 py-1.5 rounded-lg text-sm font-medium shadow-sm"
-                      style={{ backgroundColor: "#0A3D62", color: "white" }}
-                      onClick={() =>
-                        navigate(`/public/chat?chatId=${c.id}`)
-                      }
+                      className="px-4 py-1.5 rounded-lg text-sm font-semibold shadow-sm"
+                      style={{
+                        backgroundColor: "#0A3D62",
+                        color: "white",
+                      }}
+                      onClick={() => navigate(`/public/chat?chatId=${c.id}`)}
                     >
                       Lihat
                     </button>
 
-                    {/* FAQ Dropdown */}
+                    {/* FAQ */}
                     {agencyCategories.length === 0 ? (
                       <button className="px-4 py-1.5 rounded-lg bg-gray-200 text-gray-400 cursor-not-allowed text-sm">
                         Soalan Lazim (Tiada)
@@ -142,7 +165,6 @@ export default function Dashboard() {
                     ) : (
                       <select
                         className="px-4 py-1.5 rounded-lg border text-sm"
-                        style={{ backgroundColor: "white" }}
                         defaultValue=""
                         onChange={(e) => {
                           const value = e.target.value;
@@ -161,24 +183,25 @@ export default function Dashboard() {
                       </select>
                     )}
 
+                    {/* Feedback Button */}
                     <button
-                      className="px-4 py-1.5 rounded-lg text-sm shadow-sm"
-                      style={{ backgroundColor: "#FF8F54", color: "white" }}
+                      className="px-4 py-1.5 rounded-lg text-sm font-semibold shadow-sm hover:brightness-110 transition"
+                      style={{
+                        backgroundColor: "#F7D343",
+                        color: "#344767",
+                      }}
                       onClick={() =>
-                        navigate(
-                          `/public/feedback?chatId=${c.id}&agency=${c.agencyName}`
-                        )
+                        navigate(`/public/feedback?chatId=${c.id}&agency=${c.agencyName}`)
                       }
                     >
                       Aduan & Maklum Balas
                     </button>
+
                   </div>
 
                   <div className="text-sm">
                     {c.status === "active" ? (
-                      <span className="text-green-700 font-semibold">
-                        Aktif
-                      </span>
+                      <span className="text-green-700 font-semibold">Aktif</span>
                     ) : (
                       <span className="text-gray-600">Selesai</span>
                     )}
@@ -188,6 +211,7 @@ export default function Dashboard() {
             );
           })}
 
+          {/* New Chat Button */}
           <div className="mt-6 text-right">
             <button
               className="px-5 py-2 rounded-lg text-white font-medium shadow-md"
