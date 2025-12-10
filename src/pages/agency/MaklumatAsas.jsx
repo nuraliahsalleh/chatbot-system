@@ -13,10 +13,10 @@ export default function MaklumatAsas() {
 
   if (!user) {
     return (
-      <div className="p-6">
+      <div className="w-full bg-white p-10 shadow-lg border rounded-2xl">
         <p className="text-lg text-red-600">Maklumat pengguna tidak dijumpai.</p>
         <button
-          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded"
+          className="mt-4 px-4 py-2 bg-[#0A3D62] text-white rounded-lg"
           onClick={() => navigate(-1)}
         >
           Kembali
@@ -25,82 +25,126 @@ export default function MaklumatAsas() {
     );
   }
 
-  // Rekod chat sebenar untuk pengguna ini
   const userChats = chats
     .filter((c) => c.userId === user.id)
     .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold">Maklumat Asas Pengguna Awam</h2>
-      <p className="text-gray-500 mb-6">
+    <div className="w-full bg-white p-10 shadow-lg border border-gray-100 rounded-2xl">
+
+      {/* HEADER */}
+      <h1 className="text-3xl font-bold text-[#344767]">
+        Maklumat Asas Pengguna Awam
+      </h1>
+      <p className="text-gray-600 text-lg mt-2">
         Dashboard &gt; Maklumat Pengguna
       </p>
 
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-2 gap-10 mt-10">
 
-        {/* ================= LEFT ================= */}
-        <div className="p-5 bg-white shadow rounded border">
-          <h3 className="font-semibold text-lg mb-4">
+        {/* LEFT SECTION: USER INFO */}
+        <div className="p-8 bg-white rounded-2xl shadow-md border relative">
+          <div
+            className="absolute top-0 left-0 w-full h-1"
+            style={{ backgroundColor: "#F7D343" }}
+          ></div>
+
+          <h3 className="font-bold text-2xl mb-4 text-[#344767]">
             Butiran Maklumat Asas
           </h3>
 
-          <p className="text-sm font-semibold mt-2">Nama Penuh</p>
-          <p>{user.name}</p>
+          <div className="text-gray-600 text-md">
 
-          <p className="text-sm font-semibold mt-2">No. Kad Pengenalan</p>
-          <p>{user.ic}</p>
+            <div className="mb-4">
+              <p className="text-sm font-semibold text-gray-500">Nama Penuh</p>
+              <p className="text-lg text-[#344767]">{user.name}</p>
+            </div>
 
-          <p className="text-sm font-semibold mt-2">Email</p>
-          <p>{user.email}</p>
+            <div className="mb-4">
+              <p className="text-sm font-semibold text-gray-500">No. Kad Pengenalan</p>
+              <p className="text-lg text-[#344767]">{user.ic}</p>
+            </div>
 
-          <p className="text-sm font-semibold mt-2">No. Telefon</p>
-          <p>{user.phone}</p>
+            <div className="mb-4">
+              <p className="text-sm font-semibold text-gray-500">Email</p>
+              <p className="text-lg text-[#344767]">{user.email}</p>
+            </div>
 
-          <p className="text-sm font-semibold mt-2">Status Akaun</p>
-          <p className="text-green-600">Aktif</p>
+            <div className="mb-4">
+              <p className="text-sm font-semibold text-gray-500">No. Telefon</p>
+              <p className="text-lg text-[#344767]">{user.phone}</p>
+            </div>
 
-          <p className="text-sm font-semibold mt-2">Tarikh Daftar</p>
-          <p>{new Date(user.createdAt).toLocaleDateString("ms-MY")}</p>
+            <div className="mb-4">
+              <p className="text-sm font-semibold text-gray-500">Status Akaun</p>
+              <p className="text-green-600 font-semibold">Aktif</p>
+            </div>
+
+            <div className="mb-4">
+              <p className="text-sm font-semibold text-gray-500">Tarikh Daftar</p>
+              <p className="text-lg text-[#344767]">
+                {new Date(user.createdAt).toLocaleDateString("ms-MY")}
+              </p>
+            </div>
+
+          </div>
 
           <button
-            className="mt-6 px-4 py-2 bg-gray-300 rounded"
             onClick={() => navigate(-1)}
+            className="mt-6 px-5 py-2 rounded-lg text-sm font-semibold shadow-sm hover:brightness-110 transition"
+            style={{
+              backgroundColor: "#F7D343",
+              color: "#344767",
+            }}
           >
             Kembali
           </button>
         </div>
 
-        {/* ================= RIGHT ================= */}
-        <div className="p-5 bg-white shadow rounded border">
-          <h3 className="font-semibold text-lg mb-4">Rekod Chat Terkini</h3>
+        {/* RIGHT SECTION: CHAT RECORDS */}
+        <div className="p-8 bg-white rounded-2xl shadow-md border relative">
+          <div
+            className="absolute top-0 left-0 w-full h-1"
+            style={{ backgroundColor: "#F7D343" }}
+          ></div>
+
+          <h3 className="font-bold text-2xl mb-2 text-[#344767]">
+            Rekod Chat Terkini
+          </h3>
+          <p className="text-gray-500 mb-5">
+            Aktiviti chat terbaru pengguna
+          </p>
 
           {userChats.length === 0 ? (
-            <p className="text-gray-500">Tiada rekod chat.</p>
+            <div className="py-10 text-center text-gray-500">
+              Tiada rekod chat.
+            </div>
           ) : (
-            <table className="w-full text-left">
+            <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b bg-gray-50">
-                  <th className="p-2">Tarikh</th>
-                  <th className="p-2">Agensi</th>
-                  <th className="p-2">Servis</th>
-                  <th className="p-2">Status</th>
+                <tr className="border-b" style={{ backgroundColor: "#A7CCF5" }}>
+                  <th className="p-3 text-gray-600">Tarikh</th>
+                  <th className="p-3 text-gray-600">Agensi</th>
+                  <th className="p-3 text-gray-600">Servis</th>
+                  <th className="p-3 text-gray-600">Status</th>
                 </tr>
               </thead>
 
               <tbody>
                 {userChats.map((chat, i) => (
                   <tr key={i} className="border-b">
-                    <td className="p-2">
+                    <td className="p-3 text-[#344767]">
                       {new Date(chat.updatedAt).toLocaleString("ms-MY")}
                     </td>
 
-                    <td className="p-2">{chat.agencyName}</td>
+                    <td className="p-3 text-[#344767]">{chat.agencyName}</td>
 
-                    <td className="p-2">{chat.serviceName || "-"}</td>
+                    <td className="p-3 text-[#344767]">
+                      {chat.serviceName || "-"}
+                    </td>
 
                     <td
-                      className={`p-2 font-semibold ${
+                      className={`p-3 font-semibold ${
                         chat.status === "active"
                           ? "text-green-600"
                           : chat.status === "done"
@@ -115,8 +159,8 @@ export default function MaklumatAsas() {
               </tbody>
             </table>
           )}
-
         </div>
+
       </div>
     </div>
   );

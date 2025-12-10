@@ -46,13 +46,13 @@ export default function AgencyDashboard() {
   const getUserInfo = (userId) => users.find((u) => u.id === userId) || {};
 
   return (
-    <div className="min-h-screen bg-[#ffffffff] p-6 flex">
+    <div>
 
       {/* Outer White Container - LEFT ALIGNED */}
       <div className="w-full bg-white p-10 shadow-lg border border-gray-100">
 
         {/* HEADER */}
-        <h1 className="text-4xl font-bold text-[#344767]">
+        <h1 className="text-3xl font-bold text-[#344767]">
           Selamat Datang, {currentAgency?.name}
         </h1>
         <p className="text-gray-600 text-lg mt-2">
@@ -76,7 +76,7 @@ export default function AgencyDashboard() {
 
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-gray-500 text-sm">{item.label}</div>
+                  <div className="text-gray-500 text-md font-medium">{item.label}</div>
                   <div className="text-2xl font-bold text-[#344767] mt-1">
                     {item.value}
                   </div>

@@ -1,3 +1,4 @@
+
 // src/pages/agency/CategoryFAQ.jsx
 import React, { useEffect, useState } from "react";
 import { useAgency } from "../../contexts/AgencyContext";
@@ -13,20 +14,22 @@ export default function CategoryFAQ() {
   const [newCategory, setNewCategory] = useState("");
   const [categories, setCategories] = useState([]);
 
-  // Load categories for current agency
   useEffect(() => {
     if (!agencyId) return;
     const all = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
     setCategories(all.filter((c) => c.agencyId === agencyId));
   }, [agencyId]);
 
-  // Save categories (merge with other agencies)
-  const saveCategories = (updatedForThisAgency) => {
+  const saveCategories = (updated) => {
     const all = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
     const others = all.filter((c) => c.agencyId !== agencyId);
-    const merged = [...others, ...updatedForThisAgency];
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
-    setCategories(updatedForThisAgency);
+
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify([...others, ...updated])
+    );
+
+    setCategories(updated);
   };
 
   const handleAddCategory = () => {
@@ -42,17 +45,16 @@ export default function CategoryFAQ() {
       createdAt: new Date().toISOString(),
     };
 
-    const updated = [...categories, newItem];
-    saveCategories(updated);
+    saveCategories([...categories, newItem]);
     setNewCategory("");
   };
 
   const handleDeleteCategory = (id) => {
     if (!window.confirm("Padam kategori ini beserta semua soalan FAQ?")) return;
+
     const updated = categories.filter((c) => c.id !== id);
     saveCategories(updated);
 
-    // Juga buang semua soalan berkaitan kategori ini
     const allItems = JSON.parse(localStorage.getItem("faq_items") || "[]");
     const remain = allItems.filter((i) => i.categoryId !== id);
     localStorage.setItem("faq_items", JSON.stringify(remain));
@@ -62,75 +64,99 @@ export default function CategoryFAQ() {
     return (
       <div className="p-6">
         <h2 className="text-2xl font-bold mb-2">Kemaskini FAQ</h2>
-        <p className="text-gray-600">
-          Sila log masuk sebagai agensi untuk menguruskan FAQ.
-        </p>
+        <p className="text-gray-600">Sila log masuk sebagai agensi untuk menguruskan FAQ.</p>
       </div>
     );
   }
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h2 className="text-2xl font-bold mb-1">Kemaskini FAQ</h2>
-      <p className="text-sm text-gray-600 mb-6">
-        Kemaskini tetapan chatbot bagi mengekalkan ketepatan maklumat dan kelancaran perkhidmatan agensi.
-      </p>
+    <div>
+      
+      {/* MAIN BODY – SAME AS DASHBOARD */}
+      <div className="w-full bg-white p-10 shadow-lg border border-gray-100">
 
-      <div className="bg-white border rounded-lg p-5 shadow-sm mb-6">
-        <h3 className="text-lg font-semibold text-center mb-4">Kategori FAQ</h3>
-        <p className="text-sm text-gray-600 text-center mb-4">
-          Sila isi kategori FAQ di bawah untuk membuat penambahan kategori FAQ.
+        {/* HEADER */}
+        <h1 className="text-3xl font-bold text-[#344767]">
+          Kemaskini Kategori FAQ
+        </h1>
+        <p className="text-gray-600 text-lg mt-2">
+          Uruskan kategori FAQ untuk agensi anda.
         </p>
 
-        <div className="flex gap-2 mb-4">
-          <input
-            className="flex-1 border rounded px-3 py-2 text-sm bg-gray-50"
-            placeholder="Isikan jenis kategori FAQ..."
-            value={newCategory}
-            onChange={(e) => setNewCategory(e.target.value)}
-          />
-          <button
-            className="px-4 py-2 bg-black text-white rounded text-sm"
-            onClick={handleAddCategory}
-          >
-            Tambah Kategori
-          </button>
+
+        {/* ADD CATEGORY CARD */}
+        <div className="bg-white p-8 rounded-2xl shadow-md border border-gray-200 mt-10 relative">
+
+          {/* TOP BLUE BAR */}
+          <div className="absolute top-0 left-0 w-full h-1" style={{ backgroundColor: "#2196F3" }}></div>
+
+          <h3 className="text-xl font-semibold text-[#344767] mb-2">Tambah Kategori FAQ</h3>
+          <p className="text-sm text-gray-500 mb-4">
+            Sila isi nama kategori baru untuk ditambahkan.
+          </p>
+
+          <div className="flex gap-3 mb-4">
+            <input
+              className="flex-1 border border-gray-300 rounded-lg px-4 py-3 bg-gray-50 text-[#344767] focus:ring-2 focus:ring-[#0A3D62]"
+              placeholder="Isikan nama kategori FAQ..."
+              value={newCategory}
+              onChange={(e) => setNewCategory(e.target.value)}
+            />
+
+            <button
+              className="px-5 py-3 rounded-lg text-white font-semibold shadow-md hover:brightness-110 transition"
+              style={{ backgroundColor: "#0A3D62" }}
+              onClick={handleAddCategory}
+            >
+              Tambah
+            </button>
+          </div>
         </div>
 
-        {/* Senarai kategori */}
-        <div className="space-y-2">
+
+        {/* LIST CARD */}
+        <div className="bg-white p-8 rounded-2xl shadow-md border border-gray-200 mt-8">
+
+          <h3 className="text-xl font-bold text-[#344767] mb-3">Senarai Kategori FAQ</h3>
+
           {categories.length === 0 && (
-            <div className="text-sm text-gray-500">
-              Tiada kategori FAQ lagi. Sila tambah kategori baru.
-            </div>
+            <p className="text-gray-500 text-sm">Tiada kategori FAQ buat masa ini.</p>
           )}
 
-          {categories.map((cat) => (
-            <div
-              key={cat.id}
-              className="flex items-center justify-between border rounded px-3 py-2 bg-gray-50"
-            >
-              <span className="font-medium text-sm">{cat.name}</span>
+          <div className="space-y-3 mt-4">
+            {categories.map((cat) => (
+              <div
+                key={cat.id}
+                className="p-5 border border-gray-200 rounded-xl bg-gray-50 shadow-sm flex justify-between items-center"
+              >
+                <span className="font-semibold text-[#344767]">{cat.name}</span>
 
-              <div className="flex gap-2">
-                <button
-                  className="px-3 py-1 border rounded text-sm bg-white hover:bg-gray-100"
-                  onClick={() =>
-                    navigate(`/agency/faq?categoryId=${cat.id}`)
-                  }
-                >
-                  Edit
-                </button>
-                <button
-                  className="px-3 py-1 border rounded text-sm bg-red-50 text-red-600 hover:bg-red-100"
-                  onClick={() => handleDeleteCategory(cat.id)}
-                >
-                  Padam Kategori
-                </button>
+                <div className="flex gap-3">
+
+                  <button
+                    className="px-4 py-1.5 rounded-lg text-sm font-semibold shadow-sm transition hover:brightness-110"
+                    style={{ backgroundColor: "#0A3D62", color: "white" }}
+                    onClick={() => navigate(`/agency/faq?categoryId=${cat.id}`)}
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    className="px-4 py-1.5 rounded-lg text-sm font-semibold shadow-sm transition hover:brightness-110"
+                    style={{ backgroundColor: "#F7D343", color: "#344767" }}
+                    onClick={() => handleDeleteCategory(cat.id)}
+                  >
+                    Padam
+                  </button>
+
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+
+
         </div>
+
       </div>
     </div>
   );

@@ -1,195 +1,12 @@
-// import React from "react";
-
-// export default function ReportFeedbacks() {
-//   const chats = JSON.parse(localStorage.getItem("public_chats")) || [];
-
-//   const feedbacks = chats
-//     .filter((c) => c.feedback)
-//     .map((c) => ({
-//       date: c.feedback.date,
-//       userName: c.userName,
-//       message: c.feedback.message,
-//       category: c.feedback.category,
-//       rating: c.feedback.rating,
-//       file: c.feedback.fileName || null,
-//     }));
-
-//   // ============================
-//   // 📊 KLASIFIKASI FEEDBACK
-//   // ============================
-//   let positive = 0;
-//   let neutral = 0;
-//   let negative = 0;
-
-//   feedbacks.forEach((f) => {
-//     if (f.rating <= 2) negative++;
-//     else if (f.rating === 3) neutral++;
-//     else positive++;
-//   });
-
-//   const total = positive + neutral + negative;
-
-//   const percentPos = total ? Math.round((positive / total) * 100) : 0;
-//   const percentNeu = total ? Math.round((neutral / total) * 100) : 0;
-//   const percentNeg = total ? Math.round((negative / total) * 100) : 0;
-
-//   // Pie chart arc sizes
-//   const c = 42;         // radius
-//   const circumference = 2 * Math.PI * c;
-
-//   const arcPos = (percentPos / 100) * circumference;
-//   const arcNeu = (percentNeu / 100) * circumference;
-//   const arcNeg = (percentNeg / 100) * circumference;
-
-//   return (
-//     <div className="p-6 max-w-6xl mx-auto">
-//       <h2 className="text-3xl font-bold mb-2">Laporan Maklum Balas</h2>
-//       <p className="text-gray-600 mb-6">Senarai maklum balas pengguna awam.</p>
-
-//       {/* TABLE */}
-//       <div className="bg-white p-4 rounded shadow overflow-x-auto">
-//         <table className="w-full text-left border-collapse">
-//           <thead>
-//             <tr className="border-b bg-gray-100">
-//               <th className="p-3">Tarikh</th>
-//               <th className="p-3">Nama Pengguna</th>
-//               <th className="p-3">Butiran Respons</th>
-//               <th className="p-3">Jenis</th>
-//               <th className="p-3">Skor Kepuasan</th>
-//               <th className="p-3">Lampiran</th>
-//             </tr>
-//           </thead>
-
-//           <tbody>
-//             {feedbacks.length === 0 && (
-//               <tr>
-//                 <td colSpan="6" className="text-center py-6 text-gray-500">
-//                   Tiada maklum balas ditemui.
-//                 </td>
-//               </tr>
-//             )}
-
-//             {feedbacks.map((f, i) => (
-//               <tr key={i} className="border-b">
-//                 <td className="p-3">{new Date(f.date).toLocaleDateString("ms-MY")}</td>
-//                 <td className="p-3">{f.userName}</td>
-//                 <td className="p-3">{f.message}</td>
-//                 <td className="p-3">{f.category}</td>
-//                 <td className="p-3">
-//                   {"★".repeat(f.rating)}
-//                   <span className="text-gray-300">
-//                     {"★".repeat(5 - f.rating)}
-//                   </span>
-//                 </td>
-//                 <td className="p-3">
-//                   {f.file ? (
-//                     <span className="text-blue-600 underline cursor-pointer">
-//                       {f.file}
-//                     </span>
-//                   ) : (
-//                     "-"
-//                   )}
-//                 </td>
-//               </tr>
-//             ))}
-//           </tbody>
-//         </table>
-//       </div>
-
-//       {/* SUMMARY CARDS + PIE CHART */}
-//       <div className="grid grid-cols-3 gap-4 mt-8">
-        
-//         {/* Purata Skor */}
-//         <div className="p-4 bg-white rounded shadow">
-//           <div className="text-gray-500 text-sm">Purata Skor Kepuasan</div>
-//           <div className="text-2xl font-bold">
-//             {feedbacks.length > 0
-//               ? (
-//                   feedbacks.reduce((a, b) => a + b.rating, 0) / feedbacks.length
-//                 ).toFixed(1)
-//               : "-"}
-//           </div>
-//         </div>
-
-//         {/* Jumlah */}
-//         <div className="p-4 bg-white rounded shadow">
-//           <div className="text-gray-500 text-sm">Jumlah Maklum Balas</div>
-//           <div className="text-2xl font-bold">{feedbacks.length}</div>
-//         </div>
-
-//         {/* PIE CHART */}
-//         <div className="p-4 bg-white rounded shadow flex gap-4 items-center">
-//           <div>
-//             <svg width="120" height="120">
-//               <circle
-//                 r={c}
-//                 cx="60"
-//                 cy="60"
-//                 fill="transparent"
-//                 stroke="#d1d5db"
-//                 strokeWidth="20"
-//               />
-
-//               {/* POSITIF */}
-//               <circle
-//                 r={c}
-//                 cx="60"
-//                 cy="60"
-//                 fill="transparent"
-//                 stroke="#4b5563"
-//                 strokeWidth="20"
-//                 strokeDasharray={`${arcPos} ${circumference}`}
-//                 strokeDashoffset={0}
-//               />
-
-//               {/* NEUTRAL */}
-//               <circle
-//                 r={c}
-//                 cx="60"
-//                 cy="60"
-//                 fill="transparent"
-//                 stroke="#9ca3af"
-//                 strokeWidth="20"
-//                 strokeDasharray={`${arcNeu} ${circumference}`}
-//                 strokeDashoffset={-arcPos}
-//               />
-
-//               {/* NEGATIF */}
-//               <circle
-//                 r={c}
-//                 cx="60"
-//                 cy="60"
-//                 fill="transparent"
-//                 stroke="#6b7280"
-//                 strokeWidth="20"
-//                 strokeDasharray={`${arcNeg} ${circumference}`}
-//                 strokeDashoffset={-(arcPos + arcNeu)}
-//               />
-//             </svg>
-//           </div>
-
-//           <div className="text-sm">
-//             <div><span className="inline-block w-3 h-3 bg-gray-700 mr-2"></span> Positif ({percentPos}%)</div>
-//             <div><span className="inline-block w-3 h-3 bg-gray-400 mr-2"></span> Neutral ({percentNeu}%)</div>
-//             <div><span className="inline-block w-3 h-3 bg-gray-500 mr-2"></span> Negatif ({percentNeg}%)</div>
-//           </div>
-//         </div>
-
-//       </div>
-//     </div>
-//   );
-// }
 import React from "react";
 import { usePublicUsers } from "../../contexts/PublicUserContext";
 import { useAgency } from "../../contexts/AgencyContext";
+import { FaStar, FaRegStar } from "react-icons/fa";
 
 export default function ReportFeedbacks() {
   const { chats, users } = usePublicUsers();
   const { currentAgency } = useAgency();
 
-  // ============================
-  // 🔥 FILTER FEEDBACK IKUT AGENSI LOGIN
-  // ============================
   const agencyFeedbacks = chats
     .filter((c) => c.feedback && c.agencyId === currentAgency?.id)
     .map((c) => ({
@@ -201,12 +18,10 @@ export default function ReportFeedbacks() {
       file: c.feedback.fileName || null,
     }));
 
-  // ============================
-  // 📊 KLASIFIKASI FEEDBACK
-  // ============================
-  let positive = 0;
-  let neutral = 0;
-  let negative = 0;
+  // CLASSIFY FEEDBACK BY SENTIMENT
+  let positive = 0,
+    neutral = 0,
+    negative = 0;
 
   agencyFeedbacks.forEach((f) => {
     if (f.rating <= 2) negative++;
@@ -228,135 +43,212 @@ export default function ReportFeedbacks() {
   const arcNeg = (percentNeg / 100) * circumference;
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
-      <h2 className="text-3xl font-bold mb-2">Laporan Maklum Balas</h2>
-      <p className="text-gray-600 mb-6">Senarai maklum balas pengguna awam.</p>
+    <div>
 
-      {/* TABLE */}
-      <div className="bg-white p-4 rounded shadow overflow-x-auto">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="border-b bg-gray-100">
-              <th className="p-3">Tarikh</th>
-              <th className="p-3">Nama Pengguna</th>
-              <th className="p-3">Butiran Respons</th>
-              <th className="p-3">Jenis</th>
-              <th className="p-3">Skor Kepuasan</th>
-              <th className="p-3">Lampiran</th>
-            </tr>
-          </thead>
+      {/* MAIN WHITE CONTAINER */}
+      <div className="w-full bg-white p-10 shadow-lg border border-gray-100">
 
-          <tbody>
-            {agencyFeedbacks.length === 0 && (
-              <tr>
-                <td colSpan="6" className="text-center py-6 text-gray-500">
-                  Tiada maklum balas untuk agensi anda.
-                </td>
-              </tr>
-            )}
+        {/* HEADER */}
+        <h1 className="text-3xl font-bold text-[#344767]">
+          Laporan Maklum Balas Pengguna
+        </h1>
+        <p className="text-gray-600 text-lg mt-2">
+          Ringkasan dan butiran maklum balas pelanggan bagi agensi anda.
+        </p>
 
-            {agencyFeedbacks.map((f, i) => (
-              <tr key={i} className="border-b">
-                <td className="p-3">{new Date(f.date).toLocaleDateString("ms-MY")}</td>
-                <td className="p-3">{f.userName}</td>
-                <td className="p-3">{f.message}</td>
-                <td className="p-3">{f.category}</td>
-                <td className="p-3">
-                  {"★".repeat(f.rating)}
-                  <span className="text-gray-300">
-                    {"★".repeat(5 - f.rating)}
-                  </span>
-                </td>
-                <td className="p-3">
-                  {f.file ? (
-                    <span className="text-blue-600 underline cursor-pointer">
-                      {f.file}
-                    </span>
-                  ) : (
-                    "-"
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+        {/* TABLE CARD */}
+        <div className="bg-white p-8 rounded-2xl shadow-md border border-gray-200 mt-10 relative">
 
-      {/* SUMMARY CARDS + PIE CHART */}
-      <div className="grid grid-cols-3 gap-4 mt-8">
-        <div className="p-4 bg-white rounded shadow">
-          <div className="text-gray-500 text-sm">Purata Skor Kepuasan</div>
-          <div className="text-2xl font-bold">
-            {agencyFeedbacks.length > 0
-              ? (
-                  agencyFeedbacks.reduce((a, b) => a + b.rating, 0) /
-                  agencyFeedbacks.length
-                ).toFixed(1)
-              : "-"}
+          {/* TOP BLUE BAR */}
+          <div
+            className="absolute top-0 left-0 w-full h-1 rounded-t-xl"
+            style={{ backgroundColor: "#2196F3" }}
+          ></div>
+
+          <h3 className="text-xl font-semibold text-[#344767] mb-5">
+            Senarai Maklum Balas
+          </h3>
+
+          <div className="overflow-x-auto rounded-xl border border-gray-200">
+            <table className="w-full text-left border-collapse">
+
+              {/* TABLE HEADER */}
+              <thead>
+                <tr className="bg-[#bedef8ff] text-[#344767] border-b border-gray-200">
+                  <th className="p-4 text-sm font-semibold">Tarikh</th>
+                  <th className="p-4 text-sm font-semibold">Nama Pengguna</th>
+                  <th className="p-4 text-sm font-semibold">Butiran Respons</th>
+                  <th className="p-4 text-sm font-semibold">Kategori</th>
+                  <th className="p-4 text-sm font-semibold">Skor</th>
+                  <th className="p-4 text-sm font-semibold">Lampiran</th>
+                </tr>
+              </thead>
+
+              {/* TABLE BODY */}
+              <tbody className="text-[#344767]">
+
+                {/* EMPTY STATE */}
+                {agencyFeedbacks.length === 0 && (
+                  <tr>
+                    <td
+                      colSpan="6"
+                      className="text-center py-8 text-gray-500 italic"
+                    >
+                      Tiada maklum balas untuk agensi anda.
+                    </td>
+                  </tr>
+                )}
+
+                {/* FEEDBACK ROWS */}
+                {agencyFeedbacks.map((f, i) => (
+                  <tr
+                    key={i}
+                    className="border-b border-gray-100 hover:bg-[#f3f7ff] transition"
+                  >
+                    <td className="p-5 text-sm">
+                      {new Date(f.date).toLocaleDateString("ms-MY")}
+                    </td>
+
+                    <td className="p-5 text-sm font-medium">
+                      {f.userName}
+                    </td>
+
+                    <td className="p-5 text-sm">
+                      {f.message}
+                    </td>
+
+                    <td className="p-5 text-sm">
+                      {f.category}
+                    </td>
+
+                    {/* STAR RATING */}
+                    <td className="p-5 flex items-center gap-1">
+                      {[...Array(f.rating)].map((_, idx) => (
+                        <FaStar key={idx} className="text-yellow-400" />
+                      ))}
+                      {[...Array(5 - f.rating)].map((_, idx) => (
+                        <FaRegStar key={idx} className="text-gray-300" />
+                      ))}
+                    </td>
+
+                    {/* FILE */}
+                    <td className="p-5 text-sm">
+                      {f.file ? (
+                        <span className="text-blue-600 underline cursor-pointer hover:text-blue-800">
+                          {f.file}
+                        </span>
+                      ) : (
+                        "-"
+                      )}
+                    </td>
+                  </tr>
+                ))}
+
+              </tbody>
+            </table>
           </div>
         </div>
 
-        <div className="p-4 bg-white rounded shadow">
-          <div className="text-gray-500 text-sm">Jumlah Maklum Balas</div>
-          <div className="text-2xl font-bold">{agencyFeedbacks.length}</div>
-        </div>
 
-        <div className="p-4 bg-white rounded shadow flex gap-4 items-center">
-          <div>
-            <svg width="120" height="120">
+        {/* SUMMARY CARDS */}
+        <div className="grid grid-cols-3 gap-6 mt-10">
+
+          {/* CARD 1 */}
+          <div className="p-5 bg-white rounded-2xl shadow-md border relative">
+            <div
+              className="absolute top-0 left-0 w-full h-1 rounded-t-xl"
+              style={{ backgroundColor: "#F7D343" }}
+            ></div>
+            <div className="text-gray-500 text-md font-medium">Purata Skor Kepuasan</div>
+            <div className="text-3xl font-bold text-[#344767] mt-1">
+              {agencyFeedbacks.length > 0
+                ? (
+                    agencyFeedbacks.reduce((a, b) => a + b.rating, 0) /
+                    agencyFeedbacks.length
+                  ).toFixed(1)
+                : "-"}
+            </div>
+          </div>
+
+          {/* CARD 2 */}
+          <div className="p-5 bg-white rounded-2xl shadow-md border relative">
+            <div
+              className="absolute top-0 left-0 w-full h-1 rounded-t-xl"
+              style={{ backgroundColor: "#F7D343" }}
+            ></div>
+            <div className="text-gray-500 text-md font-medium">Jumlah Maklum Balas</div>
+            <div className="text-3xl font-bold text-[#344767] mt-1">
+              {agencyFeedbacks.length}
+            </div>
+          </div>
+
+          {/* PIE CHART CARD */}
+          <div className="p-5 bg-white rounded-2xl shadow-md border relative flex gap-4 items-center">
+            <div
+              className="absolute top-0 left-0 w-full h-1 rounded-t-xl"
+              style={{ backgroundColor: "#F7D343" }}
+            ></div>
+
+            <svg width="120" height="120" className="rotate-[-90deg]">
               <circle
                 r={c}
                 cx="60"
                 cy="60"
                 fill="transparent"
-                stroke="#d1d5db"
+                stroke="#e5e7eb"
                 strokeWidth="20"
               />
 
-              {/* POSITIF */}
               <circle
                 r={c}
                 cx="60"
                 cy="60"
                 fill="transparent"
-                stroke="#4b5563"
+                stroke="#1ABC9C"
                 strokeWidth="20"
                 strokeDasharray={`${arcPos} ${circumference}`}
-                strokeDashoffset={0}
               />
 
-              {/* NEUTRAL */}
               <circle
                 r={c}
                 cx="60"
                 cy="60"
                 fill="transparent"
-                stroke="#9ca3af"
+                stroke="#5DADE2"
                 strokeWidth="20"
                 strokeDasharray={`${arcNeu} ${circumference}`}
                 strokeDashoffset={-arcPos}
               />
 
-              {/* NEGATIF */}
               <circle
                 r={c}
                 cx="60"
                 cy="60"
                 fill="transparent"
-                stroke="#6b7280"
+                stroke="#2E4053"
                 strokeWidth="20"
                 strokeDasharray={`${arcNeg} ${circumference}`}
                 strokeDashoffset={-(arcPos + arcNeu)}
               />
             </svg>
-          </div>
 
-          <div className="text-sm">
-            <div><span className="inline-block w-3 h-3 bg-gray-700 mr-2"></span> Positif ({percentPos}%)</div>
-            <div><span className="inline-block w-3 h-3 bg-gray-400 mr-2"></span> Neutral ({percentNeu}%)</div>
-            <div><span className="inline-block w-3 h-3 bg-gray-500 mr-2"></span> Negatif ({percentNeg}%)</div>
+            <div className="text-sm">
+              <div>
+                <span className="inline-block w-3 h-3 bg-[#1ABC9C] mr-2"></span>
+                Positif ({percentPos}%)
+              </div>
+              <div>
+                <span className="inline-block w-3 h-3 bg-[#5DADE2] mr-2"></span>
+                Neutral ({percentNeu}%)
+              </div>
+              <div>
+                <span className="inline-block w-3 h-3 bg-[#2E4053] mr-2"></span>
+                Negatif ({percentNeg}%)
+              </div>
+            </div>
           </div>
         </div>
+
       </div>
     </div>
   );
