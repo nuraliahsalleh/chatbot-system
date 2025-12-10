@@ -1,9 +1,9 @@
-
-// src/pages/agency/Dashboard.jsx
 import React, { useMemo } from "react";
 import { usePublicUsers } from "../../contexts/PublicUserContext";
 import { useAgency } from "../../contexts/AgencyContext";
 import { useNavigate } from "react-router-dom";
+import { FaComments, FaSignal, FaCheckCircle, FaCalendarCheck, FaClock } from "react-icons/fa";
+
 
 export default function AgencyDashboard() {
   const { chats, users, setChats } = usePublicUsers();
@@ -13,33 +13,23 @@ export default function AgencyDashboard() {
   const agencyId = currentAgency?.id;
 
   const filtered = useMemo(() => {
-  if (!agencyId) return [];
+    if (!agencyId) return [];
 
-  const agencyChats = chats
-    .filter((c) => c.agencyId === agencyId)
-    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+    const agencyChats = chats
+      .filter((c) => c.agencyId === agencyId)
+      .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
-  // Group chats by userId → keep latest chat only
-  const uniqueByUser = Object.values(
-    agencyChats.reduce((acc, chat) => {
-      if (!acc[chat.userId]) {
-        acc[chat.userId] = chat;
-      } else {
-        // Keep the latest chat for each user
+    return Object.values(
+      agencyChats.reduce((acc, chat) => {
         const prev = acc[chat.userId];
-        if (new Date(chat.updatedAt) > new Date(prev.updatedAt)) {
+        if (!prev || new Date(chat.updatedAt) > new Date(prev.updatedAt)) {
           acc[chat.userId] = chat;
         }
-      }
-      return acc;
-    }, {})
-  );
+        return acc;
+      }, {})
+    );
+  }, [chats, agencyId]);
 
-  return uniqueByUser;
-}, [chats, agencyId]);
-
-
-  // Stats counter
   const stats = useMemo(() => {
     const total = filtered.length;
     const aktif = filtered.filter((c) => c.status === "active").length;
@@ -47,113 +37,140 @@ export default function AgencyDashboard() {
     return { total, aktif, selesai };
   }, [filtered]);
 
-  // Change status
-  function updateStatus(chatId, newStatus) {
+  const updateStatus = (chatId, newStatus) => {
     setChats((prev) =>
       prev.map((c) => (c.id === chatId ? { ...c, status: newStatus } : c))
     );
-  }
+  };
 
-  // Get user details for fallback
   const getUserInfo = (userId) => users.find((u) => u.id === userId) || {};
 
   return (
-    <div style={styles.container}>
-      {/* Header */}
-      <h1 style={styles.pageTitle}>Selamat Datang, {currentAgency?.name}</h1>
-      <p style={styles.subtitle}>
-        Berikut adalah ringkasan aktiviti chatbot untuk agensi anda.
-      </p>
+    <div className="min-h-screen bg-[#ffffffff] p-6 flex">
 
-      {/* Stats Row */}
-      <section style={styles.statsRow}>
-        <div style={styles.statCard}>
-          <div>Jumlah Chat</div>
-          <strong>{stats.total}</strong>
-        </div>
-        <div style={styles.statCard}>
-          <div>Chat Aktif</div>
-          <strong>{stats.aktif}</strong>
-        </div>
-        <div style={styles.statCard}>
-          <div>Chat Selesai</div>
-          <strong>{stats.selesai}</strong>
-        </div>
-        <div style={styles.statCard}>
-          <div>Masa Respons Purata</div>
-          <strong>-</strong>
-        </div>
-      </section>
+      {/* Outer White Container - LEFT ALIGNED */}
+      <div className="w-full bg-white p-10 shadow-lg border border-gray-100">
 
-      {/* CHAT TERKINI SECTION */}
-      <section style={styles.chatSection}>
-        <h2 style={styles.chatTitle}>Chat Terkini</h2>
-        <p style={styles.chatDesc}>Aktiviti chat terbaru dari pengguna</p>
+        {/* HEADER */}
+        <h1 className="text-4xl font-bold text-[#344767]">
+          Selamat Datang, {currentAgency?.name}
+        </h1>
+        <p className="text-gray-600 text-lg mt-2">
+          Berikut adalah ringkasan aktiviti chatbot untuk agensi anda.
+        </p>
 
-        {filtered.length === 0 && (
-          <div style={styles.empty}>Tiada chat buat masa ini.</div>
-        )}
 
-        <div style={styles.chatList}>
-          {filtered
-            .filter((chat) => {
+        {/* STAT CARDS */}
+        <div className="grid grid-cols-4 gap-6 mt-10 mb-10">
+          {[
+            { label: "Jumlah Chat", value: stats.total, icon: <FaComments />, color: "#2196F3" },
+            { label: "Chat Aktif", value: stats.aktif, icon: <FaSignal />, color: "#2196F3" },
+            { label: "Chat Selesai", value: stats.selesai, icon: <FaCheckCircle />, color: "#2196F3" },
+            { label: "Masa Respons Purata", value: "-", icon: <FaClock />, color: "#2196F3" },
+          ].map((item, idx) => (
+            <div
+              key={idx}
+              className="p-5 bg-white rounded-2xl shadow-md border relative"
+            >
+              <div className="absolute top-0 left-0 w-full h-1" style={{ backgroundColor: item.color }} />
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-gray-500 text-sm">{item.label}</div>
+                  <div className="text-2xl font-bold text-[#344767] mt-1">
+                    {item.value}
+                  </div>
+                </div>
+
+                <div
+                  className="p-3 rounded-xl text-white"
+                  style={{ backgroundColor: item.color }}
+                >
+                  {item.icon}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+
+        {/* CHAT TERKINI */}
+        <div className="bg-white p-8 rounded-2xl shadow-md border border-gray-200">
+          <h2 className="font-bold text-2xl mb-2 text-[#344767]">
+            Chat Terkini
+          </h2>
+          <p className="text-gray-500 mb-5">
+            Aktiviti chat terbaru dari pengguna
+          </p>
+
+          {filtered.length === 0 && (
+            <div className="py-10 text-center text-gray-500">
+              Tiada chat buat masa ini.
+            </div>
+          )}
+
+          <div className="flex flex-col gap-5">
+            {filtered.map((chat) => {
               const user = getUserInfo(chat.userId);
-              return chat.userName || user.name; // hanya chat yang ada nama
-            })
-            .map((chat) => {
-              const user = getUserInfo(chat.userId);
-              const lastMsg =
-                chat.messages[chat.messages.length - 1]?.text;
+              const lastMsg = chat.messages[chat.messages.length - 1]?.text;
 
               return (
-                <div key={chat.id} style={styles.chatCard}>
-                  <div style={styles.chatLeft}>
-                    <div style={styles.avatar}></div>
+                <div
+                  key={chat.id}
+                  className="p-5 border rounded-xl shadow-sm bg-white flex justify-between items-start"
+                >
+                  <div className="flex gap-4">
+                    <div className="w-12 h-12 rounded-full bg-gray-300" />
 
                     <div>
-                      <div style={styles.username}>
-                        <strong>
-                          {chat.userName ||
-                            user.name ||
-                            user.fullname ||
-                            user.nama ||
-                            user.displayName ||
-                            user.username ||
-                            ""}
-                        </strong>
+                      <div className="font-semibold text-lg text-[#344767]">
+                        {chat.userName ||
+                          user.name ||
+                          user.fullname ||
+                          user.username}
                       </div>
 
-                      <div style={styles.chatMessage}>{lastMsg}</div>
-                      <div style={styles.chatTime}>
-                        {new Date(chat.createdAt).toLocaleString()}
+                      <div className="text-gray-500">{lastMsg}</div>
+                      <div className="text-gray-400 text-sm mt-1">
+                        {new Date(chat.updatedAt).toLocaleString("ms-MY")}
                       </div>
                     </div>
                   </div>
 
-                  <div style={styles.chatRight}>
+                  <div className="flex flex-col items-end gap-3">
+                    {/* STATUS DROPDOWN */}
                     <select
                       value={chat.status}
-                      onChange={(e) =>
-                        updateStatus(chat.id, e.target.value)
-                      }
-                      style={styles.select}
+                      onChange={(e) => updateStatus(chat.id, e.target.value)}
+                      className="border rounded-lg px-3 py-2 text-sm"
                     >
                       <option value="active">Aktif</option>
                       <option value="pending">Menunggu</option>
                       <option value="done">Selesai</option>
                     </select>
 
-                    <div style={styles.actionButtons}>
+                    {/* ACTION BUTTONS */}
+                    <div className="flex gap-3">
+
+                      {/* UPDATED YELLOW BUTTON */}
                       <button
-                        style={styles.smallBtn}
-                        onClick={() => navigate(`/agency/maklumat-asas/${chat.userId}`)}
+                        onClick={() =>
+                          navigate(`/agency/maklumat-asas/${chat.userId}`)
+                        }
+                        className="px-4 py-1.5 rounded-lg text-sm font-semibold shadow-sm hover:brightness-110 transition"
+                        style={{
+                          backgroundColor: "#F7D343",
+                          color: "#344767",
+                        }}
                       >
                         Butiran Maklumat Asas
                       </button>
 
                       <button
-                        style={styles.primaryBtn}
-                        onClick={() => navigate(`/agency/chats/view/${chat.id}`)}
+                        onClick={() =>
+                          navigate(`/agency/chats/view/${chat.id}`)
+                        }
+                        className="px-4 py-1.5 bg-[#0A3D62] text-white rounded-lg text-sm hover:brightness-110"
                       >
                         Lihat Chat
                       </button>
@@ -163,107 +180,52 @@ export default function AgencyDashboard() {
                 </div>
               );
             })}
-        </div>
+          </div>
 
-        <div style={styles.footerButtons}>
+          {/* FOOTER BUTTONS */}
+          <div className="flex gap-3 mt-8 justify-end">
           <button
-            style={styles.secondaryBtn}
             onClick={() => navigate("/agency/reports")}
+            className="px-5 py-2 rounded-lg text-sm font-semibold shadow-sm transition"
+            style={{
+              backgroundColor: "#E5E7EB",
+              color: "#ffffffff",
+            }}
+            onMouseEnter={(e) => (e.target.style.backgroundColor = "#F7D343")}
+            onMouseLeave={(e) => (e.target.style.backgroundColor = "#0A3D62")}
           >
             Lihat Laporan Penuh
           </button>
 
           <button
-            style={styles.secondaryBtn}
             onClick={() => navigate("/agency/settings")}
+            className="px-5 py-2 rounded-lg text-sm font-semibold shadow-sm transition"
+            style={{
+              backgroundColor: "#E5E7EB",
+              color: "#ffffffff",
+            }}
+            onMouseEnter={(e) => (e.target.style.backgroundColor = "#F7D343")}
+            onMouseLeave={(e) => (e.target.style.backgroundColor = "#0A3D62")}
           >
             Tetapan Chatbot
           </button>
 
-          {/* ➜ Pergi ke halaman kategori FAQ */}
           <button
-            style={styles.secondaryBtn}
             onClick={() => navigate("/agency/faq-categories")}
+            className="px-5 py-2 rounded-lg text-sm font-semibold shadow-sm transition"
+            style={{
+              backgroundColor: "#E5E7EB",
+              color: "#ffffffff",
+            }}
+            onMouseEnter={(e) => (e.target.style.backgroundColor = "#F7D343")}
+            onMouseLeave={(e) => (e.target.style.backgroundColor = "#0A3D62")}
           >
             Kemaskini FAQ
           </button>
+
+          </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 }
-
-// ======== STYLES ========
-const styles = {
-  container: { padding: 20, maxWidth: 1100, margin: "0 auto" },
-  pageTitle: { fontSize: 28, fontWeight: 700 },
-  subtitle: { color: "#666", marginBottom: 20 },
-
-  statsRow: { display: "flex", gap: 12, marginBottom: 30 },
-  statCard: {
-    flex: 1,
-    padding: 18,
-    borderRadius: 10,
-    background: "#f1f1f1",
-  },
-
-  chatSection: { padding: 20, border: "1px solid #ddd", borderRadius: 10 },
-  chatTitle: { fontSize: 24, fontWeight: 700 },
-  chatDesc: { color: "#666", marginBottom: 10 },
-
-  chatList: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 15,
-    marginTop: 10,
-  },
-  empty: { padding: 20, textAlign: "center", color: "#777" },
-
-  chatCard: {
-    display: "flex",
-    justifyContent: "space-between",
-    padding: 15,
-    border: "1px solid #eee",
-    borderRadius: 8,
-  },
-
-  chatLeft: { display: "flex", gap: 12 },
-  avatar: {
-    width: 45,
-    height: 45,
-    borderRadius: "50%",
-    background: "#e0e0e0",
-  },
-
-  username: { fontSize: 16 },
-  chatMessage: { fontSize: 14, color: "#444" },
-  chatTime: { fontSize: 12, color: "#888" },
-
-  chatRight: { textAlign: "right" },
-  select: { padding: 6, width: 120, borderRadius: 6 },
-
-  actionButtons: { display: "flex", gap: 8, marginTop: 10 },
-  smallBtn: {
-    background: "#eee",
-    padding: "6px 8px",
-    borderRadius: 6,
-    border: "none",
-  },
-
-  primaryBtn: {
-    background: "#2b6cb0",
-    color: "white",
-    padding: "6px 12px",
-    borderRadius: 6,
-    border: "none",
-  },
-
-  footerButtons: { display: "flex", gap: 12, marginTop: 20 },
-  secondaryBtn: {
-    background: "#ddd",
-    padding: "10px 15px",
-    borderRadius: 6,
-    border: "none",
-  },
-};
-

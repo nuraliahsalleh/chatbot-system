@@ -43,10 +43,10 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#f4f7fe] p-6 flex justify-center">
+    <div className="min-h-screen bg-[#ffffffff] p-6 flex justify-center">
 
       {/* Outer Container (Modern Style) */}
-      <div className="w-full max-w-6xl bg-white rounded-3xl shadow-lg p-10 border border-gray-100">
+      <div className="w-full max-w-6xl bg-white shadow-lg p-10 border border-gray-100">
 
       {/* Header */}
       <div className="flex justify-between items-center mb-8">

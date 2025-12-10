@@ -80,11 +80,11 @@ export default function PublicFeedback() {
           {/* TOP BORDER COLOR */}
           <div
             className="absolute top-0 left-0 w-full h-1"
-            style={{ backgroundColor: "#0A3D62" }}  
+            style={{ backgroundColor: "#0077FF" }}  
           ></div>
 
           <div className="flex items-start gap-4 mt-2">
-            <div className="p-3 rounded-xl bg-[#0A3D62] text-white shadow-md">
+            <div className="p-3 rounded-xl bg-[#0077FF] text-white shadow-md">
               <FaBuilding size={26} />
             </div>
 
