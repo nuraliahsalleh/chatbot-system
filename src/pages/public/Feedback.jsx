@@ -115,7 +115,7 @@ export default function PublicFeedback() {
               <option value="Cadangan">Cadangan</option>
               <option value="Maklum Balas / Aduan">Maklum Balas / Aduan</option>
               <option value="Penghargaan">Penghargaan</option>
-              <option value="Pertanyaan">Pertanyaan</option>
+              
             </select>
           </div>
 

@@ -1,4 +1,3 @@
-
 // import React, { createContext, useContext, useState, useEffect } from "react";
 
 // const PublicUserContext = createContext(null);
@@ -56,21 +55,7 @@
 //     return newUser;
 //   };
 
-//   /* --------------------------------------------------
-//      LOGIN USER
-//   -------------------------------------------------- */
-//   // const login = (email, password) => {
-//   //   const found = users.find(
-//   //     (u) => u.email.toLowerCase() === email.toLowerCase()
-//   //   );
 
-//   //   if (!found) {
-//   //     return { success: false, message: "Email tidak ditemui." };
-//   //   }
-
-//   //   setCurrentUser(found);
-//   //   return { success: true, user: found };
-//   // };
 //   const login = (email, password) => {
 //   const found = users.find(
 //     (u) => u.email.toLowerCase() === email.toLowerCase()
@@ -210,6 +195,7 @@
 // }
 
 
+
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 const PublicUserContext = createContext(null);
@@ -220,7 +206,7 @@ export function PublicUserProvider({ children }) {
   const [chats, setChats] = useState([]);
 
   /* --------------------------------------------------
-     LOAD from localStorage on first load
+     LOAD from localStorage
   -------------------------------------------------- */
   useEffect(() => {
     try {
@@ -237,7 +223,7 @@ export function PublicUserProvider({ children }) {
   }, []);
 
   /* --------------------------------------------------
-     SAVE users + currentUser + chats to localStorage
+     SAVE users, currentUser, chats
   -------------------------------------------------- */
   useEffect(() => {
     localStorage.setItem("public_users", JSON.stringify(users));
@@ -252,14 +238,14 @@ export function PublicUserProvider({ children }) {
   }, [chats]);
 
   /* --------------------------------------------------
-     ADD NEW USER (Public Register)
+     ADD NEW USER
   -------------------------------------------------- */
   const addUser = (payload) => {
     const newUser = {
       id: Date.now().toString(),
       createdAt: new Date().toISOString(),
       totalChat: 0,
-      agencies: [],
+      agencies: [], // <- ensure always array
       ...payload,
     };
 
@@ -267,36 +253,33 @@ export function PublicUserProvider({ children }) {
     return newUser;
   };
 
-
-  const login = (email, password) => {
-  const found = users.find(
-    (u) => u.email.toLowerCase() === email.toLowerCase()
-  );
-
-  if (!found) {
-    return { success: false, message: "Email tidak ditemui." };
-  }
-
-  if (found.password !== password) {
-    return { success: false, message: "Kata laluan salah." };
-  }
-
-  setCurrentUser(found);
-  return { success: true, user: found };
-};
-
-
-
   /* --------------------------------------------------
-     LOGOUT USER
+     LOGIN
   -------------------------------------------------- */
+  const login = (email, password) => {
+    const found = users.find(
+      (u) => u.email.toLowerCase() === email.toLowerCase()
+    );
+
+    if (!found) {
+      return { success: false, message: "Email tidak ditemui." };
+    }
+
+    if (found.password !== password) {
+      return { success: false, message: "Kata laluan salah." };
+    }
+
+    setCurrentUser(found);
+    return { success: true, user: found };
+  };
+
   const logout = () => {
     setCurrentUser(null);
     localStorage.removeItem("public_current_user");
   };
 
   /* --------------------------------------------------
-     UPDATE USER 
+     UPDATE USER
   -------------------------------------------------- */
   const updateUser = (id, changes) => {
     setUsers((prev) =>
@@ -309,7 +292,7 @@ export function PublicUserProvider({ children }) {
   };
 
   /* --------------------------------------------------
-     CREATE NEW CHAT SESSION — FIXED WITH userName
+     START CHAT — UPDATED TO STORE AGENSI LIST
   -------------------------------------------------- */
   const startChat = (userId, agency) => {
     const user = users.find((u) => u.id === userId);
@@ -335,9 +318,18 @@ export function PublicUserProvider({ children }) {
 
     setChats((prev) => [newChat, ...prev]);
 
+    // ⭐ UPDATE USER: +1 chat and add agency if new
     setUsers((prev) =>
       prev.map((u) =>
-        u.id === userId ? { ...u, totalChat: (u.totalChat || 0) + 1 } : u
+        u.id === userId
+          ? {
+              ...u,
+              totalChat: (u.totalChat || 0) + 1,
+              agencies: Array.from(
+                new Set([...(u.agencies || []), agency.name])
+              ),
+            }
+          : u
       )
     );
 
@@ -345,7 +337,7 @@ export function PublicUserProvider({ children }) {
   };
 
   /* --------------------------------------------------
-     ADD MESSAGE 
+     MESSAGES
   -------------------------------------------------- */
   const addMessage = (chatId, messageText, sender = "user") => {
     setChats((prev) =>
@@ -369,13 +361,12 @@ export function PublicUserProvider({ children }) {
     );
   };
 
-  const getChatsForUser = (userId) => {
-    return chats.filter((c) => c.userId === userId);
-  };
+  /* --------------------------------------------------
+     GETTERS
+  -------------------------------------------------- */
+  const getChatsForUser = (userId) => chats.filter((c) => c.userId === userId);
 
-  const getChatById = (chatId) => {
-    return chats.find((c) => c.id === chatId);
-  };
+  const getChatById = (chatId) => chats.find((c) => c.id === chatId);
 
   return (
     <PublicUserContext.Provider
@@ -405,8 +396,5 @@ export function usePublicUsers() {
     throw new Error("usePublicUsers must be used inside PublicUserProvider");
   return ctx;
 }
-
-
-
 
 

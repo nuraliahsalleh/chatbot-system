@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { usePublicUsers } from "../../contexts/PublicUserContext";
+import dashboardLogo from "../../assets/logoConnect2.png";
 
 export default function PublicProfile() {
   const { currentUser, updateUser } = usePublicUsers();
@@ -49,88 +50,123 @@ export default function PublicProfile() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto mt-6">
+    <div className="min-h-screen bg-[#ffffffff] p-6 flex justify-center">
 
-      {/* Header */}
-      <h2 className="text-2xl font-bold">Pengurusan Profil</h2>
-      <p className="text-gray-600 mb-6">Utama &gt; Pengurusan Profil</p>
+      {/* Outer Container (Same Style as Dashboard.jsx) */}
+      <div className="w-full max-w-5xl bg-white shadow-lg p-10 border border-gray-100">
 
-      {/* Instruction */}
-      <p className="font-semibold mb-2">Kemaskini profil anda dibawah</p>
+        {/* Header - Same Structure */}
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h2 className="text-4xl font-bold text-[#344767]">
+              Pengurusan Profil
+            </h2>
 
-      <div className="border rounded-lg bg-white p-6">
-        <h3 className="text-lg font-semibold border-b pb-2 mb-4">
-          Maklumat Asas
-        </h3>
+            <p className="text-gray-600 text-lg">
+              Kemaskini maklumat akaun anda di sini.
+            </p>
+          </div>
 
-        {/* Full Name */}
-        <label className="block text-sm font-medium mt-3">
-          Nama Penuh *
-        </label>
-        <input
-          value={form.name}
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
-          className="border w-full px-3 py-2 rounded bg-gray-50"
-        />
+          {/* Logo on Right */}
+          <img
+            src={dashboardLogo}
+            alt="Profile Logo"
+            className="h-9 object-contain opacity-90 animate-pulse"
+          />
+        </div>
 
-        {/* IC */}
-        <label className="block text-sm font-medium mt-3">
-          No. Kad Pengenalan *
-        </label>
-        <input
-          value={form.ic}
-          onChange={(e) => setForm({ ...form, ic: e.target.value })}
-          className="border w-full px-3 py-2 rounded bg-gray-50"
-        />
+        {/* Form Container */}
+        <div className="bg-white p-8 rounded-2xl shadow-md border border-gray-200">
 
-        {/* Email */}
-        <label className="block text-sm font-medium mt-3">
-          Email *
-        </label>
-        <input
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-          className="border w-full px-3 py-2 rounded bg-gray-50"
-        />
+          {/* Top Highlight Bar */}
+          <div
+            className="absolute top-0 left-0 w-full h-1 rounded-t-xl"
+            style={{ backgroundColor: "#2196F3" }}
+          ></div>
 
-        {/* Phone */}
-        <label className="block text-sm font-medium mt-3">
-          No. Telefon *
-        </label>
-        <input
-          value={form.phone}
-          onChange={(e) => setForm({ ...form, phone: e.target.value })}
-          className="border w-full px-3 py-2 rounded bg-gray-50"
-        />
+          <h3 className="font-bold text-2xl mb-5 text-[#344767] border-b pb-3">
+            Maklumat Asas
+          </h3>
 
-        {/* Password */}
-        <label className="block text-sm font-medium mt-3">
-          Kata Laluan *
-        </label>
-        <input
-          type="password"
-          value={form.password}
-          readOnly
-          className="border w-full px-3 py-2 rounded bg-gray-200"
-        />
+          {/* Full Name */}
+          <label className="block text-sm font-medium text-[#344767] mt-4">
+            Nama Penuh *
+          </label>
+          <input
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            className="border w-full px-4 py-2 rounded-lg bg-gray-50 mt-1 
+                       focus:ring-2 focus:ring-[#0A3D62] outline-none"
+          />
 
-        {/* New password */}
-        <label className="block text-sm font-medium mt-3">
-          Kata Laluan Baru *
-        </label>
-        <input
-          type="password"
-          value={form.newPassword}
-          onChange={(e) => setForm({ ...form, newPassword: e.target.value })}
-          className="border w-full px-3 py-2 rounded bg-gray-50"
-        />
+          {/* IC */}
+          <label className="block text-sm font-medium text-[#344767] mt-4">
+            No. Kad Pengenalan *
+          </label>
+          <input
+            value={form.ic}
+            onChange={(e) => setForm({ ...form, ic: e.target.value })}
+            className="border w-full px-4 py-2 rounded-lg bg-gray-50 mt-1 
+                       focus:ring-2 focus:ring-[#0A3D62] outline-none"
+          />
 
-        <button
-          onClick={handleSave}
-          className="mt-5 bg-black text-white px-4 py-2 rounded hover:bg-gray-900"
-        >
-          Simpan Perubahan
-        </button>
+          {/* Email */}
+          <label className="block text-sm font-medium text-[#344767] mt-4">
+            Email *
+          </label>
+          <input
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
+            className="border w-full px-4 py-2 rounded-lg bg-gray-50 mt-1 
+                       focus:ring-2 focus:ring-[#0A3D62] outline-none"
+          />
+
+          {/* Phone */}
+          <label className="block text-sm font-medium text-[#344767] mt-4">
+            No. Telefon *
+          </label>
+          <input
+            value={form.phone}
+            onChange={(e) => setForm({ ...form, phone: e.target.value })}
+            className="border w-full px-4 py-2 rounded-lg bg-gray-50 mt-1 
+                       focus:ring-2 focus:ring-[#0A3D62] outline-none"
+          />
+
+          {/* Password */}
+          <label className="block text-sm font-medium text-[#344767] mt-4">
+            Kata Laluan *
+          </label>
+          <input
+            type="password"
+            value={form.password}
+            readOnly
+            className="border w-full px-4 py-2 rounded-lg bg-gray-200 mt-1"
+          />
+
+          {/* New Password */}
+          <label className="block text-sm font-medium text-[#344767] mt-4">
+            Kata Laluan Baru *
+          </label>
+          <input
+            type="password"
+            value={form.newPassword}
+            onChange={(e) =>
+              setForm({ ...form, newPassword: e.target.value })
+            }
+            className="border w-full px-4 py-2 rounded-lg bg-gray-50 mt-1
+                       focus:ring-2 focus:ring-[#0A3D62] outline-none"
+          />
+
+          {/* Save Button  */}
+          <button
+            onClick={handleSave}
+            className="mt-6 px-6 py-2 rounded-lg text-white font-semibold shadow-md
+                       hover:brightness-110 transition"
+            style={{ backgroundColor: "#0A3D62" }}
+          >
+            Simpan Perubahan
+          </button>
+        </div>
       </div>
     </div>
   );

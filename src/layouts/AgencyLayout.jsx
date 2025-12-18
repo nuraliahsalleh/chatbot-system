@@ -2,33 +2,30 @@ import React from "react";
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import { useAgency } from "../contexts/AgencyContext";
 import companyLogo from "../assets/logoctsb2.png";
+import { FaSignOutAlt } from "react-icons/fa";
 
 export default function AgencyLayout() {
-  const { currentAgency, logoutAgency } = useAgency(); 
+  const { currentAgency, logoutAgency } = useAgency();
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // --- Confirmation Popup ---
     const confirmLogout = window.confirm(
       "Adakah anda pasti mahu log keluar dari sistem?"
     );
     if (!confirmLogout) return;
-    // ---------------------------
 
-    logoutAgency(); // clear session agency
-    navigate("/agency-login"); // redirect ke login agency
+    logoutAgency();
+    navigate("/agency-login");
   };
-
 
   return (
     <div className="min-h-screen flex">
-
+      
       {/* SIDEBAR */}
       <aside
         className="w-64 p-5 text-white"
         style={{ backgroundColor: "#0A3D62" }}
       >
-        {/* LOGO */}
         <div className="mb-6 flex justify-center">
           <img
             src={companyLogo}
@@ -37,70 +34,78 @@ export default function AgencyLayout() {
           />
         </div>
 
-        {/* NAVIGATION */}
         <nav className="space-y-2 text-sm">
-          <Link
-            to="/agency/dashboard"
-            className="block py-2 px-3 rounded hover:bg-white/20 transition text-white"
-          >
+          <Link to="/agency/dashboard" className="block py-2 px-3 rounded hover:bg-white/20">
             Dashboard
           </Link>
-
-          <Link
-            to="/agency/settings"
-            className="block py-2 px-3 rounded hover:bg-white/20 transition text-white"
-          >
+          <Link to="/agency/settings" className="block py-2 px-3 rounded hover:bg-white/20">
             Tetapan Chatbot
           </Link>
-
-          <Link
-            to="/agency/faq-categories"
-            className="block py-2 px-3 rounded hover:bg-white/20 transition text-white"
-          >
+          <Link to="/agency/faq-categories" className="block py-2 px-3 rounded hover:bg-white/20">
             FAQ
           </Link>
-
-          <Link
-            to="/agency/reports"
-            className="block py-2 px-3 rounded hover:bg-white/20 transition text-white"
-          >
+          <Link to="/agency/reports" className="block py-2 px-3 rounded hover:bg-white/20">
             Laporan
           </Link>
         </nav>
       </aside>
 
+      {/* CONTENT AREA */}
+      <div className="flex-1 flex flex-col">
 
-      <div className="flex-1 p-6">
-        <header className="flex justify-between items-center mb-6">
-          <h1 className="text-lg font-semibold">Agency Panel</h1>
+        {/* HEADER */}
+        <header
+          className="
+            sticky top-0 z-20
+            bg-[#0A3D62] text-white
+            shadow-md
+            px-6 py-4
+            flex justify-between items-center
+          "
+        >
+          <h1 className="text-2xl font-semibold tracking-tight">
+            Agensi
+          </h1>
 
-          {/* AGENCY INFO + LOGOUT BUTTON */}
-          <div className="flex items-center space-x-4">
-            <div className="text-sm text-gray-700 font-medium">
-              {currentAgency
-                ? `Signed in as ${currentAgency.name} (${currentAgency.code})`
-                : "Signed in as Pegawai"}
-            </div>
+          <div className="flex items-center gap-4">
+            <span className="text-sm text-gray-200">
+              {currentAgency ? (
+                <>
+                  Signed in as{" "}
+                  <span className="font-semibold text-white">
+                    {currentAgency.name} ({currentAgency.code})
+                  </span>
+                </>
+              ) : (
+                "Signed in as Pegawai"
+              )}
+            </span>
 
-            {/* ===== Logout Button (Same Style as Admin) ===== */}
+            {/* Logout */}
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 border border-gray-300 px-3 py-1 rounded-md hover:bg-gray-100 transition text-sm"
               title="Log Keluar"
+              className="
+                flex items-center justify-center
+                w-10 h-10 rounded-full
+                border border-gray-300
+                bg-[#2C3E50] text-white
+                shadow-md
+                transition-all duration-300
+                hover:bg-red-100 hover:border-red-400 hover:text-red-600
+                hover:scale-110 active:scale-95
+              "
             >
-              {/* Icon */}
-              <span className="text-red-600 text-lg leading-none">↩</span>
-
-              {/* Text */}
-              <span className="text-gray-700">Log Keluar</span>
+              <FaSignOutAlt className="text-lg" />
             </button>
-            {/* ---------------------------------------------------------- */}
           </div>
         </header>
 
-        <main>
+        {/* MAIN CONTENT */}
+        <main className="flex-1 p-6 bg-gray-50">
           <Outlet />
         </main>
+
       </div>
     </div>
   );

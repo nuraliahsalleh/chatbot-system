@@ -1,58 +1,7 @@
-// import React from "react";
-// import { useNavigate } from "react-router-dom";
-
-// export default function AdminLogin() {
-//   const navigate = useNavigate();
-
-//   return (
-//     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
-//       <div className="max-w-2xl w-full bg-white rounded-xl shadow p-10">
-        
-//         {/* Title */}
-//         <h2 className="text-2xl font-semibold text-center mb-6">
-//           Log Masuk Admin
-//         </h2>
-
-//         {/* Icon */}
-//         <div className="flex justify-center mb-6">
-//           <div className="w-28 h-28 rounded-full bg-gray-100 flex items-center justify-center text-4xl">
-//             👤
-//           </div>
-//         </div>
-
-//         {/* Form */}
-//         <div className="space-y-4">
-//           <input
-//             className="input-pill"
-//             placeholder="Email atau Username"
-//           />
-          
-//           <input
-//             className="input-pill"
-//             placeholder="Kata Laluan"
-//             type="password"
-//           />
-
-//           <div className="flex justify-between items-center">
-//             <div className="text-sm text-gray-600 hover:underline cursor-pointer">
-//               Forgot password?
-//             </div>
-
-//             <button
-//               className="btn-black"
-//               onClick={() => navigate("/admin/dashboard")}
-//             >
-//               Log Masuk
-//             </button>
-//           </div>
-//         </div>
-
-//       </div>
-//     </div>
-//   );
-// }
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import companyLogo from "../../assets/logoConnect2.png";
+import bg from "../../assets/bgLoginAdmin.jpg";
 
 export default function AdminLogin() {
   const navigate = useNavigate();
@@ -93,54 +42,94 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
-      <div className="max-w-2xl w-full bg-white rounded-xl shadow p-10">
+  <div
+  className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden"
+    style={{
+      backgroundImage: `
+        linear-gradient(135deg, rgba(24, 202, 205, 0.55), rgba(180, 193, 255, 0.75)),
+        url(${bg})
+      `,
+      backgroundSize: "100%",     
+      backgroundRepeat: "no-repeat",
+      backgroundPosition: "center",
+    }}
+  >
 
-        <h2 className="text-2xl font-semibold text-center mb-6">
-          Log Masuk Admin
-        </h2>
+    {/* DARK GRADIENT MASK */}
+    <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]"></div>
 
-        <div className="flex justify-center mb-6">
-          <div className="w-28 h-28 rounded-full bg-gray-100 flex items-center justify-center text-4xl">
-            👤
-          </div>
+    {/* SOFT SPOTLIGHT */}
+    <div className="absolute inset-0 
+        bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.15),rgba(0,0,0,0.85))]">
+    </div>
+
+    {/* LOGIN CARD */}
+    <div
+      className="
+        relative w-full max-w-md 
+        bg-white/55 backdrop-blur-2xl 
+        shadow-2xl rounded-2xl p-10 
+        transform transition-all duration-500 
+        hover:scale-[1.02]
+        border border-white/20   /* transparent soft border */
+      "
+    >
+
+      {/* Logo */}
+      <div className="flex justify-center mb-8">
+        <img
+          src={companyLogo}
+          alt="Admin Logo"
+          className="h-16 animate-logoFloat drop-shadow-xl"
+        />
+      </div>
+
+      <h2 className="text-3xl font-bold text-center text-[#0A3D62] mb-6">
+        Admin Panel
+      </h2>
+
+      {error && (
+        <div className="bg-red-100 text-red-700 p-2 rounded mb-4 text-center text-sm">
+          {error}
         </div>
+      )}
 
-        {/* Error Message */}
-        {error && (
-          <div className="bg-red-100 text-red-700 p-2 rounded mb-4 text-center text-sm">
-            {error}
+      <div className="space-y-5">
+        <input
+          className="w-full px-4 py-3 rounded-xl border border-gray-300
+                     focus:ring-2 focus:ring-[#0A3D62] focus:outline-none transition"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+
+        <input
+          className="w-full px-4 py-3 rounded-xl border border-gray-300
+                     focus:ring-2 focus:ring-[#0A3D62] focus:outline-none transition"
+          placeholder="Kata Laluan"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        <div className="flex justify-between items-center text-sm">
+          <div className="text-gray-200 cursor-pointer hover:underline">
+            Terlupa kata laluan?
           </div>
-        )}
 
-        <div className="space-y-4">
-          <input
-            className="input-pill"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-
-          <input
-            className="input-pill"
-            placeholder="Kata Laluan"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-
-          <div className="flex justify-between items-center">
-            <div className="text-sm text-gray-600 hover:underline cursor-pointer">
-              Terlupa kata laluan?
-            </div>
-
-            <button className="btn-black" onClick={handleLogin}>
-              Log Masuk
-            </button>
-          </div>
+          <button
+            onClick={handleLogin}
+            className="px-6 py-2 rounded-xl text-white font-semibold shadow-md
+                      transition-all bg-[#0A3D62]
+                      hover:bg-[#083353] hover:shadow-lg 
+                      hover:scale-105 active:scale-95"
+          >
+            Log Masuk
+          </button>
         </div>
-
       </div>
     </div>
-  );
+  </div>
+);
+
 }

@@ -71,16 +71,20 @@ export default function PublicLayout() {
                   />
                 </Link>
 
-                {/* LOGOUT BUTTON — white background, red icon remains */}
+                {/* LOGOUT BUTTON  */}
                 <button
                   onClick={handleLogout}
-                  className="text-white hover:text-gray-300 transition"
                   title="Log Keluar"
+                  className="
+                    text-white 
+                    transition-all duration-300 
+                    hover:text-red-400 
+                    hover:scale-125 
+                    active:scale-95
+                  "
                 >
                   <FaSignOutAlt size={22} />
                 </button>
-
-
               </div>
             )}
           </div>

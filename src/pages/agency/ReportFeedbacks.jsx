@@ -2,10 +2,12 @@ import React from "react";
 import { usePublicUsers } from "../../contexts/PublicUserContext";
 import { useAgency } from "../../contexts/AgencyContext";
 import { FaStar, FaRegStar } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 export default function ReportFeedbacks() {
   const { chats, users } = usePublicUsers();
   const { currentAgency } = useAgency();
+  const navigate = useNavigate();
 
   const agencyFeedbacks = chats
     .filter((c) => c.feedback && c.agencyId === currentAgency?.id)
@@ -103,7 +105,7 @@ export default function ReportFeedbacks() {
                 {agencyFeedbacks.map((f, i) => (
                   <tr
                     key={i}
-                    className="border-b border-gray-100 hover:bg-[#f3f7ff] transition"
+                    className="border-b border-gray-100 hover:bg-[#fff6d2ff] transition"
                   >
                     <td className="p-5 text-sm">
                       {new Date(f.date).toLocaleDateString("ms-MY")}
@@ -142,6 +144,7 @@ export default function ReportFeedbacks() {
                       )}
                     </td>
                   </tr>
+                  
                 ))}
 
               </tbody>
@@ -248,6 +251,15 @@ export default function ReportFeedbacks() {
             </div>
           </div>
         </div>
+
+          {/* BACK BUTTON */}
+          <button
+            onClick={() => navigate("/agency/reports")}
+            className="px-5 py-2 rounded-lg text-white font-semibold shadow-md mt-5"
+            style={{ backgroundColor: "#0A3D62" }}
+          >
+            Kembali ke Laporan
+          </button>
 
       </div>
     </div>

@@ -184,46 +184,40 @@ export default function AgencyDashboard() {
 
           {/* FOOTER BUTTONS */}
           <div className="flex gap-3 mt-8 justify-end">
-          <button
-            onClick={() => navigate("/agency/reports")}
-            className="px-5 py-2 rounded-lg text-sm font-semibold shadow-sm transition"
-            style={{
-              backgroundColor: "#E5E7EB",
-              color: "#ffffffff",
-            }}
-            onMouseEnter={(e) => (e.target.style.backgroundColor = "#F7D343")}
-            onMouseLeave={(e) => (e.target.style.backgroundColor = "#0A3D62")}
-          >
-            Lihat Laporan Penuh
-          </button>
+            <button
+              onClick={() => navigate("/agency/reports")}
+              className="px-5 py-2 rounded-lg text-sm font-semibold shadow-sm"
+              style={{
+                backgroundColor: "#0A3D62",
+                color: "#ffffff",
+              }}
+            >
+              Lihat Laporan Penuh
+            </button>
 
-          <button
-            onClick={() => navigate("/agency/settings")}
-            className="px-5 py-2 rounded-lg text-sm font-semibold shadow-sm transition"
-            style={{
-              backgroundColor: "#E5E7EB",
-              color: "#ffffffff",
-            }}
-            onMouseEnter={(e) => (e.target.style.backgroundColor = "#F7D343")}
-            onMouseLeave={(e) => (e.target.style.backgroundColor = "#0A3D62")}
-          >
-            Tetapan Chatbot
-          </button>
+            <button
+              onClick={() => navigate("/agency/settings")}
+              className="px-5 py-2 rounded-lg text-sm font-semibold shadow-sm"
+              style={{
+                backgroundColor: "#0A3D62",
+                color: "#ffffff",
+              }}
+            >
+              Tetapan Chatbot
+            </button>
 
-          <button
-            onClick={() => navigate("/agency/faq-categories")}
-            className="px-5 py-2 rounded-lg text-sm font-semibold shadow-sm transition"
-            style={{
-              backgroundColor: "#E5E7EB",
-              color: "#ffffffff",
-            }}
-            onMouseEnter={(e) => (e.target.style.backgroundColor = "#F7D343")}
-            onMouseLeave={(e) => (e.target.style.backgroundColor = "#0A3D62")}
-          >
-            Kemaskini FAQ
-          </button>
-
+            <button
+              onClick={() => navigate("/agency/faq-categories")}
+              className="px-5 py-2 rounded-lg text-sm font-semibold shadow-sm"
+              style={{
+                backgroundColor: "#0A3D62",
+                color: "#ffffff",
+              }}
+            >
+              Kemaskini FAQ
+            </button>
           </div>
+
         </div>
       </div>
     </div>
